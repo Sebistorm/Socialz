@@ -13,7 +13,7 @@ CREATE TABLE IF NOT EXISTS users(
     email VARCHAR(150) UNIQUE,
     name VARCHAR(60),
     password VARCHAR(60),
-    profilepicture VARCHAR(155) DEFAULT 'Sandnes'
+    profilepicture VARCHAR(155) DEFAULT 'ano-user.png'
 )
 `);
 

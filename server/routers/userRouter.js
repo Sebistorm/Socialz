@@ -1,6 +1,30 @@
 import Router  from "express";
 const router = Router();
 
+import multer from "multer";
+
+const storage = multer.diskStorage({
+    
+    destination: (req, file, callback) => {
+        // first argument is for error
+        callback(null, 'uploads/');
+    },
+    filename: (req, file, callback) => {
+        callback(null, Date.now().toString() + file.originalname);
+    }
+});
+
+const fileFilter = (req, file, callback) => {
+    if(file.mimetype === "image/jpeg" || file.mimetype === "image/png") callback(null, true);
+
+    callback(null, false);
+}
+
+const upload = multer({
+    storage: storage,
+    fileFilter: fileFilter
+});
+
 import bcrypt from "bcrypt";
 
 import connection from "../database/createMySQLConnection.js"
@@ -27,6 +51,17 @@ router.put("/users/:id", (req, res) => {
     }) 
 });
 
+// for profilepicture
+router.patch("/users/:id", upload.single("profilepicture") ,(req, res) => {    
+    connection.query({
+        sql:"UPDATE users SET profilepicture = ? WHERE id = ?",
+        values: [req.file.path, req.params.id]
+    }, async (error, results) => {
+        if(error) res.sendStatus(404);
+        if(results) res.sendStatus(200);
+    }) 
+});
+
 router.delete("/users/:id", (req, res) => {    
     connection.query("DELETE FROM users WHERE id = ?", [req.params.id], function (error, results) {
         if(error) res.sendStatus(404);
@@ -47,7 +82,7 @@ router.post("/users", authLimiter , async (req,res) => {
 });
 
 
-router.post("/users/login", (req, res) => {
+router.post("/users/login", authLimiter , (req, res) => {
     connection.query("SELECT * FROM users WHERE email = ?", [req.body.email], async function (error, results) {
         if(error) res.sendStatus(404);
         if(results) {

@@ -7,6 +7,7 @@ import helmet from "helmet";
 app.use('/api', helmet());
 
 import path from "path";
+app.use("/uploads", express.static("uploads"));
 app.use(express.static(path.resolve("../client/public")));
 
 import session from "express-session"

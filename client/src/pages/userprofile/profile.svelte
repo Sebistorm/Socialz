@@ -5,8 +5,7 @@
 
     let name;
     let email;
-    // TODO 
-    //let profile;
+    let profilepicture;
 
     onMount(async () => {
 		const response = await fetch(`/users/${$user.id}`);
@@ -14,6 +13,7 @@
         console.log(data);
         name = data[0].name;
         email = data[0].email;
+        profilepicture = data[0].profilepicture
 	});
 
 </script>
@@ -21,7 +21,7 @@
 <div class="container mt-5">
     <div class="row topSectionWrapper">
         <div class="left d-flex align-items-center">
-            <img class="w-100" src="https://scontent-cph2-1.xx.fbcdn.net/v/t1.6435-9/46125876_2356529027707727_7847054293747105792_n.jpg?_nc_cat=104&ccb=1-7&_nc_sid=09cbfe&_nc_ohc=noUmYiNB0PYAX_FOB7w&_nc_ht=scontent-cph2-1.xx&oh=00_AT-ys2VlWmPKdjNcdpcd4zCA7-pGhCSI8cv_hUflsGg1xg&oe=62FADB86" alt="me">
+            <img class="w-100" src="{profilepicture}" alt="{name}">
             <div>
                 <h2>{name}</h2>
                 <h5>{email}</h5>
@@ -49,5 +49,7 @@
         max-width: 200px;
         border-radius: 100%;
         margin-right: 2rem;
+        height: 200px;
+        object-fit: cover;
     }
 </style>

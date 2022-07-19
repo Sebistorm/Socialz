@@ -9,6 +9,7 @@
 
     let name;
     let email;
+	let profilepicture;
 
     onMount(async () => {
 		const response = await fetch(`/users/${$user.id}`);
@@ -40,28 +41,60 @@
 			}
 		});
 	}
+
+	async function handleUpdateProfilePicture(e) {
+		e.preventDefault();
+		const formData = new FormData();
+		formData.append("profilepicture", profilepicture[0]);
+		
+		fetch(`/users/${$user.id}`, {
+			method: 'PATCH',
+			body: formData
+		}).then(async data =>  { 
+			if (data.status === 200) {
+                const from = ($location.state && $location.state.from) || "/profile";
+                navigate(from, { replace: true });
+			}
+		});
+
+	}
+
+
+
 </script>
 
 
 <div class="container">
     <h1>Edit Profile</h1>
-    <form on:submit={handleSubmit}>
-		<label for="email">email</label>
-		<input
-			bind:value={email}
-			type="text"
-			name="email"
-			placeholder="email"
-		/>
-		<label for="name">Name</label>
-		<input
-			bind:value={name}
-			type="text"
-			name="name"
-			placeholder="name"
-		/>
-		<button type="submit">Save</button>
-	</form>
+	<div class="editWrapper">
+		<form on:submit={handleSubmit}>
+			<label for="email">email</label>
+			<input
+				bind:value={email}
+				type="text"
+				name="email"
+				placeholder="email"
+			/>
+			<label for="name">Name</label>
+			<input
+				bind:value={name}
+				type="text"
+				name="name"
+				placeholder="name"
+			/>
+			<button type="submit">Save</button>
+		</form>
+
+		<form on:submit="{handleUpdateProfilePicture}" enctype="multipart/form-data">
+			<label for="email">Profile Picture</label>
+			<input
+				bind:files="{profilepicture}"
+				type="file"
+				name="profilepicture"
+			/>
+			<button type="submit">Update</button>
+		</form>
+	</div>
 </div>
 
 <style>
@@ -89,5 +122,11 @@ button {
 
 label {
 	margin-bottom: 5px;
+}
+
+.editWrapper {
+	display: grid;
+	grid-template-columns: 1fr 1fr;
+	grid-column-gap: 2rem;
 }
 </style>
