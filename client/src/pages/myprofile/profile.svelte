@@ -5,7 +5,7 @@
 
     let name;
     let email;
-    let profilepicture;
+    let profilepicture = "uploads/ano-user.png";
 
     onMount(async () => {
 		const response = await fetch(`/users/${$user.id}`);
@@ -21,7 +21,7 @@
 <div class="container mt-5">
     <div class="row topSectionWrapper">
         <div class="left d-flex align-items-center">
-            <img class="w-100" src="{profilepicture}" alt="{name}">
+            <img class="w-100" src="/{profilepicture}" alt="{name}">
             <div>
                 <h2>{name}</h2>
                 <h5>{email}</h5>

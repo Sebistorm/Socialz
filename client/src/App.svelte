@@ -2,12 +2,14 @@
 	import { Router, Route, Link } from "svelte-navigator";
 	import PrivateRoute from "./component/privateRoute/PrivateRoute.svelte";
 
-	import UserSignup from "./pages/usersignup/signup.svelte"
-	import UserLogin from "./pages/userlogin/login.svelte"
-	import UserProfile from "./pages/userprofile/profile.svelte"
-	import UserEditProfile from "./pages/userprofile/editprofile.svelte"
-	import UserConfirmDelete from "./pages/userprofile/confirmdeleteuser.svelte"
-	import Home from "./pages/home/home.svelte"
+	import UserSignup from "./pages/usersignup/signup.svelte";
+	import UserLogin from "./pages/userlogin/login.svelte";
+	import UserProfile from "./pages/myprofile/profile.svelte";
+	import UserEditProfile from "./pages/myprofile/editprofile.svelte";
+	import UserConfirmDelete from "./pages/myprofile/confirmdeleteuser.svelte";
+	import Users from "./pages/users/users.svelte";
+	import User from "./pages/user/user.svelte"
+	import Home from "./pages/home/home.svelte"; 
 
 	
 
@@ -22,6 +24,7 @@
 			<Link to="signup">Signup</Link>
 			<Link to="login">Login</Link>
 			<Link to="profile">profile</Link>
+			<Link to="users">Users</Link>
 		</nav>
 		<div>
 			<Route path="/">
@@ -32,6 +35,8 @@
 			<Route path="profile" component={UserProfile} />
 			<Route path="editUser" component={UserEditProfile} />
 			<Route path="confirmDeleteUser" component={UserConfirmDelete} />
+			<Route path="users" component={Users} />
+			<Route path="users/:id" component={User} />
 			
 		</div>
 	</Router>

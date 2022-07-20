@@ -26,11 +26,11 @@
 		let userObjectString = JSON.stringify(user);
 
 		const fetchOptions = {
-		method: "PUT",
-		headers: {
-			"Content-Type": "application/json"
-		},
-		body: userObjectString
+			method: "PUT",
+			headers: {
+				"Content-Type": "application/json"
+			},
+			body: userObjectString
 		}
 
 		fetch(`/users/${$user.id}`, fetchOptions)
