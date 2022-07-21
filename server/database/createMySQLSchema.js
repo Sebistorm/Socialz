@@ -35,3 +35,17 @@ CREATE TABLE IF NOT EXISTS follows(
     following_fk INT
 )
 `);
+
+// Seed for chatmessages
+if (deleteMode) {
+    db.query("DROP TABLE IF EXISTS chatmessages")
+}
+
+db.query(`
+CREATE TABLE IF NOT EXISTS chatmessages(
+    id INT PRIMARY KEY AUTO_INCREMENT,
+    user_fk INT,
+    person_fk INT,
+    chatmessage VARCHAR(255)
+)
+`);

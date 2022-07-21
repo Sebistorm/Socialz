@@ -4,6 +4,7 @@
 
     import { onMount } from "svelte";
     import {user} from "../../store/userStore";
+    import { Link } from "svelte-navigator";
 
     let name;
     let email;
@@ -71,7 +72,7 @@
             <img class="w-100" src="/{profilepicture}" alt="{name}">
             <div>
                 <h2>{name}</h2>
-                <h5>{email}</h5>
+                <h5>{email}</h5> 
             </div>
         </div>
         <div class="right d-flex align-items-end">
@@ -82,7 +83,7 @@
             {#if followingUser == false}
                 <button on:click="{handleAddFollowing}" class="btn btn-primary me-2">follow</button>
             {/if}
-            <button class="btn btn-danger">Besked</button>
+            <button class="btn btn-danger"><Link to="/messages/t/{id}">Chat messages</Link></button>
         </div>
         
     

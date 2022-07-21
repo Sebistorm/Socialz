@@ -9,7 +9,11 @@
 	import UserConfirmDelete from "./pages/myprofile/confirmdeleteuser.svelte";
 	import Users from "./pages/users/users.svelte";
 	import User from "./pages/user/user.svelte"
+
 	import Home from "./pages/home/home.svelte"; 
+
+	import Chat from "./pages/chat/chat.svelte";
+
 
 	
 
@@ -37,6 +41,7 @@
 			<Route path="confirmDeleteUser" component={UserConfirmDelete} />
 			<Route path="users" component={Users} />
 			<Route path="users/:id" component={User} />
+			<Route path="messages/t/:id" component={Chat} />
 			
 		</div>
 	</Router>
@@ -50,6 +55,11 @@
     text-decoration: none !important;
     color: white !important;
   }
+
+:global(.container a):hover {
+	text-decoration: none !important;
+	color: unset;
+}
 
 :global(.container a):hover {
 	text-decoration: none !important;

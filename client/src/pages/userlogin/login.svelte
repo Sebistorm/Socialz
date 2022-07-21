@@ -26,11 +26,13 @@
 		fetch("/users/login", fetchOptions)
 		.then(async data =>  { 
             const result = await data.json();
-			const id = result.id;
 			if (data.status === 200) {
-                user.set({ id });
+                user.set({ 
+					id: result.id,
+					name: result.name 
+				});
                 const from = ($location.state && $location.state.from) || "/";
-                navigate(from, { replace: true });
+               	navigate(from, { replace: true });
 			}
 		});
 	}

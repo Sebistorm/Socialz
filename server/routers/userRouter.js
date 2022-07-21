@@ -99,6 +99,23 @@ router.get("/users/:userID/following/:followingID", (req, res) => {
 });
 
 
+// chat messages
+router.post("/users/:userID/person/:personID", (req, res) => {
+    connection.query("INSERT INTO chatmessages (user_fk, person_fk, chatmessage) VALUES(?,?,?)", [req.params.userID, req.params.personID, req.body.chatMessage], (error, results) => {
+        if(error) res.sendStatus(404);
+        if(results) res.sendStatus(200);
+    })
+});
+
+router.get("/users/:userID/person/:personID", (req, res) => {
+    connection.query("SELECT chatmessages.id, chatmessages.chatmessage, chatmessages.user_fk , users.name as personname from chatmessages JOIN users ON chatmessages.user_fk = users.id WHERE user_fk = ? AND person_fk = ? OR user_fk = ? AND person_fk = ?", [req.params.userID, req.params.personID, req.params.personID, req.params.userID], (error, results) => {
+        console.log(results)
+        if(error) res.sendStatus(404);
+        if(results) res.send({ data: results });
+    })
+});
+
+
 
 
 
@@ -125,7 +142,10 @@ router.post("/users/login", authLimiter , (req, res) => {
             if (isSame) {
                 req.session.isLoggedIn = true;
                 req.session.userID = results[0].id;
-                res.send({ id: results[0].id });
+                res.send({ 
+                    id: results[0].id,
+                    name: results[0].name
+                });
             } 
             // if the password does not match with the user
             if (!isSame) res.sendStatus(404);

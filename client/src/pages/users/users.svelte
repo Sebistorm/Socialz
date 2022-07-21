@@ -1,7 +1,7 @@
 <script>
     import { onMount } from "svelte/internal";
     import User from "../../component/user/user.svelte"
-    export let users = [];
+    let users = [];
 
     onMount(async () => {
             const response = await fetch("/users");
@@ -32,21 +32,6 @@
         grid-template-columns: 1fr 1fr 1fr 1fr;
         grid-column-gap: 2rem;
         grid-row-gap: 2rem;
-    }
-
-    .user {
-        background-color: #858585;
-        color: white;
-    }
-
-    .user img {
-        width: 100%;
-    }
-
-    .user h4 {
-        text-align: center;
-        padding: 0.5rem;
-        margin-bottom: 0px;
     }
 
 </style>
