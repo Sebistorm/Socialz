@@ -9,12 +9,20 @@
 
     let chatMessages = [];
 
+    let personName;
+    let personProfilepicture = "uploads/ano-user.png";
+
     onMount(async () => {
-		const response = await fetch(`/users/${$user.id}/person/${id}`);
-		const { data } = await response.json();
-        chatMessages = data;
+		const chatResponse = await fetch(`/users/${$user.id}/person/${id}`);
+		const { chatData } = await chatResponse.json();
+        chatMessages = chatData;
         console.log(chatMessages)
 
+        const personResponse = await fetch(`/users/${id}`);
+		const { userData } = await personResponse.json();
+        console.log(userData);
+        personName = userData[0].name;
+        personProfilepicture = userData[0].profilepicture
 
 	});
 
@@ -71,7 +79,13 @@
         </div>
 
         <div class="user">
-            <p>Daniel</p>
+            <div class="userWrapper">
+                <div class="userImgWrapper">
+                    <img src="/{personProfilepicture}" alt="{personName}">
+                    <div id="userStatus"></div>
+                </div>
+                <h4 class="mt-3">{personName}</h4>
+            </div>
         </div>
     </div>
 </div>
@@ -98,6 +112,39 @@
     .chatTyping input {
         width: 20%;
     }
+    
+    .userImgWrapper {
+        display: flex;
+        flex-direction: column;
+        position: relative;
+        align-items: center;
+    }
+
+    .userImgWrapper img {
+        width: 200px;
+        height: 200px;
+        object-fit: cover;
+    }
+
+    #userStatus {
+        width: 40px;
+        height: 40px;
+        background-color: red;
+        border-radius: 100%;
+        position: absolute;
+        border: 2px solid white;
+        bottom: -10px;
+    }
+
+    .userWrapper h4 {
+        text-align: center;
+        width: 90%;
+        margin: 0 auto;
+        padding-bottom: 0.5rem;
+        border-bottom: 1px solid grey;
+    }
+
+
 
 
 </style>

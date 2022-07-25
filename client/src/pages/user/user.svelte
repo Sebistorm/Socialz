@@ -14,11 +14,11 @@
 
     onMount(async () => {
         const response = await fetch(`/users/${id}`);
-		const { data } = await response.json();
-        console.log(data);
-        name = data[0].name;
-        email = data[0].email;
-        profilepicture = data[0].profilepicture
+		const { userData } = await response.json();
+        console.log(userData);
+        name = userData[0].name;
+        email = userData[0].email;
+        profilepicture = userData[0].profilepicture
 
         let followingUserResponse = await fetch(`/users/${$user.id}/following/${id}`);
         const status  = await followingUserResponse.json();

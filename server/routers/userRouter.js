@@ -42,7 +42,7 @@ router.get("/users/", (req, res) => {
 router.get("/users/:userID", (req, res) => {    
     connection.query("SELECT email, name, profilepicture FROM users WHERE id = ?", [req.params.userID], (error, results) => {
         if(error) res.sendStatus(404);
-        if(results) res.send({ data: results });
+        if(results) res.send({ userData: results });
     })
 });
 
@@ -111,7 +111,7 @@ router.get("/users/:userID/person/:personID", (req, res) => {
     connection.query("SELECT chatmessages.id, chatmessages.chatmessage, chatmessages.user_fk , users.name as personname from chatmessages JOIN users ON chatmessages.user_fk = users.id WHERE user_fk = ? AND person_fk = ? OR user_fk = ? AND person_fk = ?", [req.params.userID, req.params.personID, req.params.personID, req.params.userID], (error, results) => {
         console.log(results)
         if(error) res.sendStatus(404);
-        if(results) res.send({ data: results });
+        if(results) res.send({ chatData: results });
     })
 });
 

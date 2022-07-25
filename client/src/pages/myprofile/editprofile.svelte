@@ -13,10 +13,10 @@
 
     onMount(async () => {
 		const response = await fetch(`/users/${$user.id}`);
-		const { data } = await response.json();
-        console.log(data);
-        name = data[0].name;
-        email = data[0].email;
+		const { userData } = await response.json();
+        console.log(userData);
+        name = userData[0].name;
+        email = userData[0].email;
 	});
 
     async function handleSubmit(e) {
