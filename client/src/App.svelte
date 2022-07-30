@@ -14,6 +14,11 @@
 
 	import Chat from "./pages/chat/chat.svelte";
 
+	import EventCreate from "./pages/event/createevent.svelte";
+	import MyEvents from "./pages/event/usersevents.svelte";
+	import Event from "./pages/event/event.svelte";
+	import EventEdit from "./pages/event/editEvent.svelte";
+	import EventDelete from "./pages/event/confirmdeleteEvent.svelte";
 
 	
 
@@ -42,6 +47,12 @@
 			<Route path="users" component={Users} />
 			<Route path="users/:id" component={User} />
 			<Route path="messages/t/:id" component={Chat} />
+			<Route path="users/:id/events" component={MyEvents} />
+
+			<Route path="createevnet" component={EventCreate} />
+			<Route path="events/:id" component={Event} />
+			<Route path="editEvent/:id" component={EventEdit} />
+			<Route path="confirmDeleteEvent/:id" component={EventDelete} />
 			
 		</div>
 	</Router>

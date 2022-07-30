@@ -1,28 +1,31 @@
 <script>
-	import { useNavigate, useLocation } from "svelte-navigator";
-	
-	//const navigate = useNavigate();
-	//const location = useLocation();
 
-	let user = {
-        email: null,
-		name: null,
-		password: null,
-	};
+    import {user} from "../../store/userStore";
 
-	async function handleSubmit(e) {
+    let event = {
+        title: null,
+        description: null,
+        date: null,
+        createdby_fk: $user.id
+    }
+
+    async function handleSubmit(e) {
 		e.preventDefault();
-		let userObjectString = JSON.stringify(user);
+		console.log("hej")
+        console.log(event.date);
+
+        let eventObjectString = JSON.stringify(event);
+        console.log(eventObjectString);
 
 		const fetchOptions = {
 		method: "POST",
 		headers: {
 			"Content-Type": "application/json"
 		},
-		body: userObjectString
+		body: eventObjectString
 		}
 
-		fetch("/users", fetchOptions)
+		fetch("/events", fetchOptions)
 		.then(data =>  {
 			console.log(data);
 			// Send it to login
@@ -30,40 +33,38 @@
 			//navigate(from, { replace: true });
 		});
 	}
-
 </script>
 
-<div id="signupWrapper" class="container">
+
+<div id="createEventWrapper" class="container">
 	<form on:submit={handleSubmit}>
-		<h3>Signup</h3>
-		<label for="email">Email</label>
+		<h3>Create Event</h3>
+		<label for="name">Title</label>
 		<input
-			bind:value={user.email}
+			bind:value={event.title}
 			type="text"
-			name="email"
-			placeholder="email"
+			name="title"
+			placeholder="title"
 		/>
-        <label for="name">Name</label>
-		<input
-			bind:value={user.name}
+        <label for="name">Description</label>
+		<textarea
+			bind:value={event.description}
 			type="text"
-			name="name"
-			placeholder="name"
+			name="description"
+			placeholder="description"
 		/>
-		<label for="password">Password</label>
+		<label for="password">date</label>
 		<input
-			bind:value={user.password}
-			type="password"
-			name="password"
-			placeholder="Password"
+			bind:value={event.date}
+			type="date"
+			name="date"
 		/>
-		<button type="submit">Signup</button>
+		<button type="submit">Create</button>
 	</form>
 </div>
 
-
 <style>
-#signupWrapper {
+#createEventWrapper {
 	display: flex;
     align-items: center;
     min-height: calc(100vh - 62px);

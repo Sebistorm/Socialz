@@ -4,7 +4,7 @@ const app = express();
 app.use(express.json());
 
 import helmet from "helmet";
-app.use('/api', helmet());
+app.use('/', helmet());
 
 import path from "path";
 app.use("/uploads", express.static("uploads"));
@@ -20,6 +20,9 @@ app.use(session({
 
 import userRouter from "./routers/userRouter.js";
 app.use(userRouter);
+
+import evnetRouter from "./routers/eventRouter.js";
+app.use(evnetRouter);
 
 
 

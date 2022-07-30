@@ -13,7 +13,7 @@ CREATE TABLE IF NOT EXISTS users(
     email VARCHAR(150) UNIQUE,
     name VARCHAR(60),
     password VARCHAR(60),
-    profilepicture VARCHAR(155) DEFAULT 'uploads/ano-user.png'
+    profilepicture VARCHAR(255) DEFAULT 'uploads/ano-user.png'
 )
 `);
 
@@ -47,5 +47,21 @@ CREATE TABLE IF NOT EXISTS chatmessages(
     user_fk INT,
     person_fk INT,
     chatmessage VARCHAR(255)
+)
+`);
+
+// Seed for chatmessages
+if (deleteMode) {
+    db.query("DROP TABLE IF EXISTS events")
+}
+
+db.query(`
+CREATE TABLE IF NOT EXISTS events(
+    id INT PRIMARY KEY AUTO_INCREMENT,
+    title VARCHAR(150),
+    description VARCHAR(255),
+    date VARCHAR(60),
+    createdby_fk INT,
+    eventpicture VARCHAR(255) DEFAULT 'uploads/ano-user.png'
 )
 `);
