@@ -17,8 +17,9 @@
 	import EventCreate from "./pages/event/createevent.svelte";
 	import MyEvents from "./pages/event/usersevents.svelte";
 	import Event from "./pages/event/event.svelte";
-	import EventEdit from "./pages/event/editEvent.svelte";
-	import EventDelete from "./pages/event/confirmdeleteEvent.svelte";
+	import EventEdit from "./pages/event/editevent.svelte";
+	import EventDelete from "./pages/event/confirmdeleteevent.svelte"; 
+	import EventInvitePeople from "./pages/event/invitepeopletoevent.svelte";
 
 	
 
@@ -53,6 +54,7 @@
 			<Route path="events/:id" component={Event} />
 			<Route path="editEvent/:id" component={EventEdit} />
 			<Route path="confirmDeleteEvent/:id" component={EventDelete} />
+			<Route path="events/:id/invite" component={EventInvitePeople} />
 			
 		</div>
 	</Router>

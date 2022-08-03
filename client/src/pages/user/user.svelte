@@ -77,11 +77,11 @@
         </div>
         <div class="right d-flex align-items-end">
             {#if followingUser == true}
-                <button on:click="{handleDeleteFollowing}" class="btn btn-primary me-2">Unfollow</button>
+                <button on:click={handleDeleteFollowing} class="btn btn-primary me-2">Unfollow</button>
             {/if}
 
             {#if followingUser == false}
-                <button on:click="{handleAddFollowing}" class="btn btn-primary me-2">follow</button>
+                <button on:click={handleAddFollowing} class="btn btn-primary me-2">follow</button>
             {/if}
             <button class="btn btn-danger"><Link to="/messages/t/{id}">Chat messages</Link></button>
         </div>

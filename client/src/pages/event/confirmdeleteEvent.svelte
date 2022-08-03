@@ -31,7 +31,7 @@
 
 <div class="container mt-5">
     <h1>Are you sure you want to delete the Event?</h1> 
-    <button on:click="{handleDeleteEvent}" class="btn btn-danger">Delete Event</button>
+    <button on:click={handleDeleteEvent} class="btn btn-danger">Delete Event</button>
 </div>
 
 

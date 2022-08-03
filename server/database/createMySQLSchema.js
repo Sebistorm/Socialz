@@ -50,7 +50,7 @@ CREATE TABLE IF NOT EXISTS chatmessages(
 )
 `);
 
-// Seed for chatmessages
+// Seed for Events
 if (deleteMode) {
     db.query("DROP TABLE IF EXISTS events")
 }
@@ -63,5 +63,19 @@ CREATE TABLE IF NOT EXISTS events(
     date VARCHAR(60),
     createdby_fk INT,
     eventpicture VARCHAR(255) DEFAULT 'uploads/ano-user.png'
+)
+`);
+
+// Seed for Events invites
+if (deleteMode) {
+    db.query("DROP TABLE IF EXISTS events_invites")
+}
+
+db.query(`
+CREATE TABLE IF NOT EXISTS events_invites(
+    id INT PRIMARY KEY AUTO_INCREMENT,
+    event_fk INT,
+    user_fk INT,
+    status VARCHAR(50) DEFAULT 'Invited'
 )
 `);

@@ -9,7 +9,7 @@
     let title;
     let date;
     let eventpicture = "uploads/ano-user.png";
-    let createdby_fk;
+    let createdby_fk; 
 
 
     onMount(async () => {
@@ -40,7 +40,8 @@
         {#if createdby_fk === $user.id}
             <div class="right d-flex align-items-end">
                 <p class="btn btn-primary me-2"><Link to="/editEvent/{id}">Edit Event</Link></p>
-                <p class="btn btn-danger"><Link to="/confirmDeleteEvent/{id}">Delete Event</Link></p>
+                <p class="btn btn-danger me-2"><Link to="/confirmDeleteEvent/{id}">Delete Event</Link></p>
+                <p class="btn btn-secondary"><Link to="/events/{id}/invite">Invite People</Link></p>
             </div> 
         {/if}
         
@@ -59,7 +60,7 @@
 
 img {
     width: 100%;
-    height: 400px;
+    height: 250px;
     object-fit: cover;
 }
 
