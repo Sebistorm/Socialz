@@ -12,7 +12,7 @@
         console.log(userID);
         if (invited === false) {
             const invitePeopleResponse = await fetch(`/events/${eventID}/invite/${userID}`, {
-            method: "post",
+            method: "post"
             })
             const {invitePeopleData} = await invitePeopleResponse.json();
             console.log(invitePeopleData);

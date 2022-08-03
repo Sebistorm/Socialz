@@ -1,6 +1,6 @@
 import db from "./createMySQLConnection.js";
 
-const deleteMode = true;
+const deleteMode = false;
 
 // Seed for users
 if (deleteMode) {
@@ -77,5 +77,19 @@ CREATE TABLE IF NOT EXISTS events_invites(
     event_fk INT,
     user_fk INT,
     status VARCHAR(50) DEFAULT 'Invited'
+)
+`);
+
+// Seed for Events posts
+if (!deleteMode) {
+    db.query("DROP TABLE IF EXISTS events_posts")
+}
+
+db.query(`
+CREATE TABLE IF NOT EXISTS events_posts(
+    id INT PRIMARY KEY AUTO_INCREMENT,
+    event_fk INT,
+    text VARCHAR(255),
+    date VARCHAR(255) DEFAULT CURRENT_TIMESTAMP
 )
 `);

@@ -118,7 +118,7 @@ router.get("/users/:userID/person/:personID", (req, res) => {
 
 // events
 router.get("/users/:userID/events", (req, res) => {
-    connection.query("SELECT * from events WHERE createdby_fk = ? ", [req.params.userID], (error, results) => {
+    connection.query("SELECT * from events WHERE id IN (select event_fk from events_invites where user_fk = ? ) OR createdby_fk = ?", [req.params.userID, req.params.userID], (error, results) => {
         console.log(results)
         if(error) res.sendStatus(404);
         if(results) res.send({ myEventsData: results });

@@ -20,6 +20,7 @@
 	import EventEdit from "./pages/event/editevent.svelte";
 	import EventDelete from "./pages/event/confirmdeleteevent.svelte"; 
 	import EventInvitePeople from "./pages/event/invitepeopletoevent.svelte";
+	import EventGuestList from "./pages/event/guestlist.svelte";
 
 	
 
@@ -55,6 +56,7 @@
 			<Route path="editEvent/:id" component={EventEdit} />
 			<Route path="confirmDeleteEvent/:id" component={EventDelete} />
 			<Route path="events/:id/invite" component={EventInvitePeople} />
+			<Route path="events/:id/users" component={EventGuestList} />
 			
 		</div>
 	</Router>
@@ -69,6 +71,7 @@
     color: white !important;
   }
 
+
 :global(.container a):hover {
 	text-decoration: none !important;
 	color: unset;
@@ -78,5 +81,9 @@
 	text-decoration: none !important;
 	color: unset;
 }
+:global(.container a.text-blue) {
+    color: #4599ff !important;
+  }
+
 	
 </style>

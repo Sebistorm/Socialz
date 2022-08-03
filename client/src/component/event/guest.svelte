@@ -23,7 +23,7 @@
 
     .user img {
         width: 100%;
-        height: 210px;
+        height: 120px;
         object-fit: cover;
     }
 
