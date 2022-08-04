@@ -5,19 +5,10 @@
     import { onMount } from "svelte";
     import People from "../../component/event/peopletoinvite.svelte";
 
-    let invitedPeopleIds = [];
     let peopleToInvite = [];
 
     onMount(async () => {
-        const invitedPeopleResponse = await fetch(`/events/${id}/users`);
-        const {invitedPeopleData} = await invitedPeopleResponse.json();
-        console.log(invitedPeopleData)
-        invitedPeopleData.forEach(people => {
-            invitedPeopleIds.push(people.id);
-        });
-        console.log(invitedPeopleIds);
-
-        const peopleToInviteResponse = await fetch(`/events/${id}/invite?users=${invitedPeopleIds}`);
+        const peopleToInviteResponse = await fetch(`/events/${id}/invite`);
 		const { peopleToInviteData } = await peopleToInviteResponse.json();
         console.log(peopleToInviteData);
         peopleToInvite = peopleToInviteData;

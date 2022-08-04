@@ -77,7 +77,21 @@
         })
         const {eventPostData} = await eventPostResponse.json();
         if(eventPostData === "success") {
+            const date = new Date();
+            const day = date.getDay();
+            const month = date.getMonth()+1;
+            const year = date.getFullYear();
+            const hour = date.getHours();
+            const min = date.getMinutes();
+            const dateObject = day + '/' + month + '/' + year  + ' kl. ' + hour  + '.' + min;
+            const newEventPost = {
+                title: title,
+                date: dateObject,
+                text: eventPostText
+            }
+            eventPosts = [{...newEventPost}, ...eventPosts];
             eventPostText = "";
+            
         }
     }
     

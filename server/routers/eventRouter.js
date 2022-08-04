@@ -62,11 +62,7 @@ router.get("/events/:eventID/users/count", (req, res) => {
 
 // invite people section
 router.get("/events/:eventID/invite", (req, res) => { 
-    let userIds = [];
-    req.query.users.split(",").forEach(number => {
-        userIds.push(Number(number))
-    });
-    connection.query("SELECT id, name, profilepicture from users where id IN (select user_fk from follows where following_fk = ?) AND NOT id IN (select user_fk from events_invites where user_fk IN (?)) AND NOT id = ?", [req.session.userID, userIds, req.session.userID] ,(error, results) => {
+    connection.query("Select * from users where id IN (select user_fk from follows where following_fk = ?) AND NOT id IN (select user_fk from events_invites where event_fk = ?) AND NOT id = ?", [req.session.userID, req.params.eventID, req.session.userID] ,(error, results) => {
         if(error) res.sendStatus(404);
         if(results) res.send({ peopleToInviteData: results });
     })

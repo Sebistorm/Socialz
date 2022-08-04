@@ -1,9 +1,11 @@
 <script>
     import { onMount } from "svelte/internal";
+    import io from "socket.io-client";
     import {user} from "../../store/userStore";
     import MyChatMessage from "../../component/chat/mychatmessage.svelte";
     import PersonChatMessage from "../../component/chat/personchatmessage.svelte"
 
+    const socket = io();
     let url_string = window.location.pathname;
     let id = url_string.split("t/")[1]
 
@@ -16,15 +18,29 @@
 		const chatResponse = await fetch(`/users/${$user.id}/person/${id}`);
 		const { chatData } = await chatResponse.json();
         chatMessages = chatData;
-        console.log(chatMessages)
+        //console.log(chatMessages)
 
         const personResponse = await fetch(`/users/${id}`);
 		const { userData } = await personResponse.json();
-        console.log(userData);
+        //console.log(userData);
         personName = userData[0].name;
         personProfilepicture = userData[0].profilepicture
 
 	});
+
+
+    // client side code
+    socket.emit('create', Number($user.id));
+
+    socket.on("privateMessage", (msg) => { 
+        const newMessageFromAnotherUser = {
+            user_fk: 0,
+            personname: personName,
+            chatmessage: msg
+        }
+        chatMessages = [...chatMessages, {...newMessageFromAnotherUser}];
+
+    }); 
 
 
 
@@ -34,24 +50,36 @@
 
     function handleSubmit (e) {
         e.preventDefault();
-        console.log("hej") 
+        if(chatMessage.chatMessage.length > 0) {
+            console.log(chatMessage)    
+            let messageObjectString = JSON.stringify(chatMessage);
+            console.log(messageObjectString);
 
-        console.log(chatMessage)    
-        let messageObjectString = JSON.stringify(chatMessage);
-        console.log(messageObjectString);
+            const fetchOptions = {
+            method: "POST",
+            headers: {
+                "Content-Type": "application/json"
+                },
+            body: messageObjectString
+            }
 
-		const fetchOptions = {
-		method: "POST",
-		headers: {
-			"Content-Type": "application/json"
-		},
-		body: messageObjectString
-		}
-
-        fetch(`/users/${$user.id}/person/${id}`, fetchOptions)
-		.then(async data =>  { 
-            console.log(data);
-		});
+            fetch(`/users/${$user.id}/person/${id}`, fetchOptions)
+            .then(async data =>  { 
+                console.log(data);
+                
+                socket.emit("messageSent", chatMessage.chatMessage, Number(id));
+                const newMessageFromAnotherUser = {
+                    user_fk: $user.id,
+                    personname: $user.name,
+                    chatmessage: chatMessage.chatMessage
+                }
+                chatMessages = [...chatMessages, {...newMessageFromAnotherUser}];
+                chatMessage.chatMessage = ""
+            });
+        } else {
+            console.log("YOu have to write more than 1 letter")
+        }
+        
     }
 </script>
 

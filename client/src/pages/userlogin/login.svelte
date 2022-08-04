@@ -1,4 +1,6 @@
 <script>
+	import io from "socket.io-client";
+	const socket = io();
 	import { useNavigate, useLocation } from "svelte-navigator";
 	
 	const navigate = useNavigate();
@@ -6,15 +8,15 @@
 
 	import {user} from "../../store/userStore";
   
-    let password;
-	let email; 
+    
+	let newUser = {
+		email: "",
+		password: ""
+	}
 
 	async function handleSubmit(e) {
 		e.preventDefault();
-        user.email = email;
-		user.password = password
-		let userObjectString = JSON.stringify(user);
-
+		let userObjectString = JSON.stringify(newUser);
 		const fetchOptions = {
 		method: "POST",
 		headers: {
@@ -31,6 +33,7 @@
 					id: result.id,
 					name: result.name 
 				});
+				socket.emit("userLoggedIn", result.id);
                 const from = ($location.state && $location.state.from) || "/";
                	navigate(from, { replace: true });
 			}
@@ -44,14 +47,14 @@
 		<h3>Login</h3>
 		<label for="email">email</label>
 		<input
-			bind:value={email}
+			bind:value={newUser.email}
 			type="text"
 			name="email"
 			placeholder="email"
 		/>
 		<label for="password">Password</label>
 		<input
-			bind:value={password}
+			bind:value={newUser.password}
 			type="password"
 			name="password"
 			placeholder="Password"
