@@ -24,19 +24,15 @@ import { Server } from "socket.io";
 const io = new Server(server);
 
 
+let count = 0; 
 
 io.on("connection", (socket) => {
-    //socket.join("room1"); 
-    //console.log("one user connected: " + socket.id)
     socket.on("userLoggedIn", ( userid ) => {
         console.log("user logged in: " + userid)
-       
-        let msg = "kom nu!"
-
+        count++
+        socket.broadcast.emit("userOnline", count);
         
-        //socket.broadcast.emit("privateMessage", { msg });
-        
-    }); 
+    });   
 
     socket.on('create', (sendersID) => {
         io.socketsLeave(sendersID);
@@ -46,6 +42,11 @@ io.on("connection", (socket) => {
     socket.on("messageSent", (msg, anotherSocketId) => {
         socket.to(anotherSocketId).emit("privateMessage", msg);   
     }) 
+
+    socket.on("logout", (count) => {
+        count--
+        socket.broadcast.emit("userOnline", count);  
+    })
 
 });
 

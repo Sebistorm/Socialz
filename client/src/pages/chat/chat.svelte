@@ -50,10 +50,8 @@
 
     function handleSubmit (e) {
         e.preventDefault();
-        if(chatMessage.chatMessage.length > 0) {
-            console.log(chatMessage)    
+        if(chatMessage.chatMessage.length > 0) {    
             let messageObjectString = JSON.stringify(chatMessage);
-            console.log(messageObjectString);
 
             const fetchOptions = {
             method: "POST",

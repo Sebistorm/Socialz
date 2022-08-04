@@ -1,6 +1,8 @@
 <script>
 	import { Router, Route, Link } from "svelte-navigator";
 	import PrivateRoute from "./component/privateRoute/PrivateRoute.svelte";
+	import { user } from "./store/userStore";
+	import io from "socket.io-client";
 
 	import UserSignup from "./pages/usersignup/signup.svelte";
 	import UserLogin from "./pages/userlogin/login.svelte";
@@ -22,7 +24,17 @@
 	import EventInvitePeople from "./pages/event/invitepeopletoevent.svelte";
 	import EventGuestList from "./pages/event/guestlist.svelte";
 
-	
+	const socket = io();
+	let userOnlineCount = 0;
+	socket.on("userOnline", (count) => { 
+		userOnlineCount = count;
+    }); 
+
+	function handleLogout() {
+		socket.emit('logout', userOnlineCount);
+		console.log("logout")
+		$user = null;
+	}
 
 </script>
 
@@ -36,6 +48,9 @@
 			<Link to="login">Login</Link>
 			<Link to="profile">profile</Link>
 			<Link to="users">Users</Link>
+
+			<span>{userOnlineCount} users online</span> 
+			<span on:click={handleLogout}>Logout</span>
 		</nav>
 		<div>
 			<Route path="/">
