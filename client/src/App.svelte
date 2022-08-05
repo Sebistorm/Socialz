@@ -12,9 +12,9 @@
 	import Users from "./pages/users/users.svelte";
 	import User from "./pages/user/user.svelte"
 
-	import Home from "./pages/home/home.svelte"; 
-
 	import Chat from "./pages/chat/chat.svelte";
+
+	import Home from "./pages/home/home.svelte"; 
 
 	import EventCreate from "./pages/event/createevent.svelte";
 	import MyEvents from "./pages/event/usersevents.svelte";
@@ -23,6 +23,16 @@
 	import EventDelete from "./pages/event/confirmdeleteevent.svelte"; 
 	import EventInvitePeople from "./pages/event/invitepeopletoevent.svelte";
 	import EventGuestList from "./pages/event/guestlist.svelte";
+
+	import ProductCreate from "./pages/products/product/createproduct.svelte";
+	import ProductEdit from "./pages/products/product/editproduct.svelte";
+	import Product from "./pages/products/product/product.svelte";
+	import ProductDelete from "./pages/products/product/confirmdeleteproduct.svelte";
+
+
+	import MyProducts from "./pages/products/products/myProducts.svelte";
+
+
 
 	const socket = io();
 	let userOnlineCount = 0;
@@ -72,6 +82,12 @@
 			<Route path="confirmDeleteEvent/:id" component={EventDelete} />
 			<Route path="events/:id/invite" component={EventInvitePeople} />
 			<Route path="events/:id/users" component={EventGuestList} />
+
+			<Route path="marketplace/create" component={ProductCreate} />
+			<Route path="marketplace/users/:id/myproducts" component={MyProducts} />
+			<Route path="marketplace/products/:id" component={Product} />
+			<Route path="marketplace/editproduct/:id" component={ProductEdit} />
+			<Route path="marketplace/confirmdeleteproduct/:id" component={ProductDelete} />
 			
 		</div>
 	</Router>

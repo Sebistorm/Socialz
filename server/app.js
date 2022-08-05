@@ -54,8 +54,11 @@ io.on("connection", (socket) => {
 import userRouter from "./routers/userRouter.js";
 app.use(userRouter);
 
-import evnetRouter from "./routers/eventRouter.js";
-app.use(evnetRouter);
+import eventRouter from "./routers/eventRouter.js";
+app.use(eventRouter);
+
+import productRouter from "./routers/productRouter.js";
+app.use(productRouter); 
 
 
 

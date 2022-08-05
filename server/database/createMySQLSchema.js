@@ -93,3 +93,46 @@ CREATE TABLE IF NOT EXISTS events_posts(
     date VARCHAR(255) DEFAULT CURRENT_TIMESTAMP
 )
 `);
+
+// Seed for products
+if (deleteMode) {
+    db.query("DROP TABLE IF EXISTS products")
+}
+
+db.query(`
+CREATE TABLE IF NOT EXISTS products(
+    id INT PRIMARY KEY AUTO_INCREMENT,
+    title VARCHAR(150),
+    description VARCHAR(60),
+    price VARCHAR(60),
+    productpicture VARCHAR(255),
+    category_fk INT,
+    seller_fk INT
+)
+`);
+
+// Seed for product categories
+if (deleteMode) {
+    db.query("DROP TABLE IF EXISTS productcategories")
+}
+
+db.query(`
+CREATE TABLE IF NOT EXISTS productcategories(
+    id INT PRIMARY KEY AUTO_INCREMENT,
+    categoryname VARCHAR(100)
+)
+`);
+
+if (deleteMode) {
+    db.query(`INSERT INTO productcategories (categoryname) VALUES ("Vehicles")`);
+    db.query(`INSERT INTO productcategories (categoryname) VALUES ("Clothing")`);
+    db.query(`INSERT INTO productcategories (categoryname) VALUES ("Electronics")`);
+    db.query(`INSERT INTO productcategories (categoryname) VALUES ("Entertainment")`);
+    db.query(`INSERT INTO productcategories (categoryname) VALUES ("Family")`);
+    db.query(`INSERT INTO productcategories (categoryname) VALUES ("Garden")`);
+    db.query(`INSERT INTO productcategories (categoryname) VALUES ("Hobbies")`);
+    db.query(`INSERT INTO productcategories (categoryname) VALUES ("Musical Instruments")`);
+    db.query(`INSERT INTO productcategories (categoryname) VALUES ("Sports")`);
+    db.query(`INSERT INTO productcategories (categoryname) VALUES ("Games & Toys")`);
+}
+

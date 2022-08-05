@@ -46,14 +46,14 @@
 			name="title"
 			placeholder="title"
 		/>
-        <label for="name">Description</label>
+        <label for="description">Description</label>
 		<textarea
 			bind:value={event.description}
 			type="text"
 			name="description"
 			placeholder="description"
 		/>
-		<label for="password">date</label>
+		<label for="date">date</label>
 		<input
 			bind:value={event.date}
 			type="date"
