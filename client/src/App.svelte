@@ -2,7 +2,7 @@
 	import { Router, Route, Link } from "svelte-navigator";
 	import PrivateRoute from "./component/privateRoute/PrivateRoute.svelte";
 	import { user } from "./store/userStore";
-	import io from "socket.io-client";
+	import io from "socket.io-client"; 
 
 	import UserSignup from "./pages/usersignup/signup.svelte";
 	import UserLogin from "./pages/userlogin/login.svelte";

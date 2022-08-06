@@ -6,7 +6,7 @@
     import { Link } from "svelte-navigator";
     import {user} from "../../../store/userStore";
 
-    let title;
+    let title; 
     let price;
     let description;
     let category;
@@ -14,11 +14,17 @@
     let sellerEmail;
     let seller_fk;
     let productImg;
+    let productactive;
+
+    let buyer = {
+        buyer_fk: $user.id,
+        seller_fk: null
+    }
 
     onMount(async () => {
         const ProductResponse = await fetch(`/products/${productID}`);
         const { ProductData } = await ProductResponse.json();
-        console.log(ProductData)
+        console.log(ProductData); 
         title = ProductData[0].title;
         price = ProductData[0].price;
         description = ProductData[0].description;
@@ -27,12 +33,38 @@
         sellerEmail = ProductData[0].email;
         seller_fk = ProductData[0].seller_fk;
         productImg = ProductData[0].productpicture;
+        productactive = ProductData[0].active;
 	});
+
+    let buymsg = "";
+    async function handleBuyProduct(e) {
+        e.preventDefault();
+        buyer.seller_fk = seller_fk;
+        console.log("buy")
+        console.log(buyer);
+        const buyProductResponse = await fetch(`/products/${productID}/receipts`, {
+            method: "post",
+            headers: {
+                'content-type': 'application/json'
+            },
+            body: JSON.stringify(buyer)
+        })
+        const {buyProductData} = await buyProductResponse.json();
+        if(buyProductData === "success") {
+            buymsg = "congratz! You have bought this product"
+        }
+        console.log(buyProductData);
+    }
 </script>
 
 <div class="container">
     <div id="productWrapper">
-        <img class="w-100" src="/{productImg}" alt="{title}">
+        <div class="imgWrapper">
+            <img class="w-100" src="/{productImg}" alt="{title}">
+            {#if productactive === 0}
+                <div class="soldSign">Sold</div>
+            {/if}
+        </div>
         <div class="productDetails d-flex flex-column">
             <h2>Product Details</h2>
             <h1>{title}</h1>
@@ -49,6 +81,30 @@
                     <p class="btn btn-danger me-2"><Link to="/marketplace/confirmdeleteproduct/{productID}">Delete Product</Link></p>
                 </div> 
             {/if}
+
+            {#if productactive === 1}
+                <h2 class="mt-3">Buy</h2>
+                <p>{buymsg}</p>
+                <form on:submit={handleBuyProduct}>
+                    <label for="fullname">Fullname</label>
+                    <input class="w-75" type="text">
+                    <label for="cardnumber">Cardnumber</label>
+                    <input class="w-75" type="number">
+                    <div class="d-flex">
+                        <div class="d-flex flex-column">
+                            <label for="expiringdate">Expiring date</label>
+                            <input class="w-50" type="number">
+                        </div>
+                        <div class="d-flex flex-column">
+                            <label for="CVC">CVC</label>
+                            <input class="w-50" type="number">
+                        </div>
+                    </div>
+                    <button class="btn btn-primary w-75 mt-3" type="submit">Buy</button>
+                </form>
+            {/if}
+
+            
         </div>
     </div>
 </div>
@@ -77,4 +133,36 @@
     .productDetails p {
         margin-bottom: 0.5rem;
     }
+
+
+    input {
+        width: 100%;
+        height: 40px;
+        padding: 0px 10px;
+        color: #222;
+    }
+
+    input:focus-visible {
+        outline: -webkit-focus-ring-color auto 1px;
+    }
+
+
+    label {
+        margin-bottom: 5px;
+    }
+
+    .imgWrapper {
+        position: relative;
+    }
+
+    .soldSign {
+        position: absolute;
+        bottom: 0;
+        background-color: red;
+        width: 100%;
+        color: white;
+        padding: 1rem;
+        text-align: center;
+        font-size: 2.5rem;
+    }    
 </style>

@@ -15,12 +15,15 @@
     "rollup-plugin-livereload": "^2.0.0",
     "rollup-plugin-svelte": "^7.0.0",
     "rollup-plugin-terser": "^7.0.0",
-    "svelte": "^3.0.0"
+    "stripe": "^10.0.0",
+    "svelte": "^3.0.0",
+    "svelte-stripe": "^0.0.19"
   },
   "dependencies": {
     "bootstrap": "^5.1.3",
     "sirv-cli": "^2.0.0",
     "socket.io-client": "^4.5.0",
+    "svelte-environment-variables": "^1.0.4",
     "svelte-navigator": "^3.1.5"
   }
 }

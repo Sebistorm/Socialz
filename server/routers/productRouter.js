@@ -56,7 +56,7 @@ router.delete("/products/:productID", (req, res) => {
 
 
 router.get("/products/:productID" ,(req, res) => {  
-    connection.query("SELECT products.id, products.title, products.price,  products.description, products.productpicture, products.seller_fk, products.category_fk ,users.email, users.name, productcategories.categoryname FROM products JOIN users ON products.seller_fk = users.id JOIN productcategories ON products.category_fk = productcategories.id WHERE products.id = ?", [req.params.productID], async (error, results) => {
+    connection.query("SELECT products.id, products.title, products.price,  products.description, products.productpicture, products.seller_fk, products.category_fk, products.active ,users.email, users.name, productcategories.categoryname FROM products JOIN users ON products.seller_fk = users.id JOIN productcategories ON products.category_fk = productcategories.id WHERE products.id = ?", [req.params.productID], async (error, results) => {
         if(error) res.send({ ProductData: "error" });
         if(results) res.send({ ProductData: results });
     })  
@@ -77,10 +77,6 @@ router.put("/products/:productID/productpicture", upload.single("productpicture"
 });
 
 
-
-
-
-
 // Myproducts
 router.get("/products/users/:userID" ,(req, res) => {  
     connection.query("SELECT id, title, price, productpicture FROM products WHERE seller_fk = ?", [req.params.userID], async (error, results) => {
@@ -89,6 +85,20 @@ router.get("/products/users/:userID" ,(req, res) => {
     }) 
 });
 
+// Buy product / receipt
+router.post("/products/:productID/receipts" ,(req, res) => {  
+    connection.query("INSERT INTO productreceipts (product_fk, seller_fk, buyer_fk) VALUES(?,?,?)", [req.params.productID, req.body.seller_fk, req.body.buyer_fk], async (error, results) => {
+        if(error) res.send({ buyProductData: "error" });
+        if(results) {
+            connection.query("UPDATE products SET active = false WHERE id = ?", [req.params.productID], async (error, results) => {
+                if(error) res.send({ buyProductData: "error" });
+                if(results) res.send({ buyProductData: "success" });
+            })         
+        }
+    }) 
+
+    
+});
 
 
 

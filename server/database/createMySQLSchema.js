@@ -95,7 +95,7 @@ CREATE TABLE IF NOT EXISTS events_posts(
 `);
 
 // Seed for products
-if (deleteMode) {
+if (!deleteMode) {
     db.query("DROP TABLE IF EXISTS products")
 }
 
@@ -107,7 +107,8 @@ CREATE TABLE IF NOT EXISTS products(
     price VARCHAR(60),
     productpicture VARCHAR(255),
     category_fk INT,
-    seller_fk INT
+    seller_fk INT,
+    active BOOLEAN DEFAULT true
 )
 `);
 
@@ -136,3 +137,17 @@ if (deleteMode) {
     db.query(`INSERT INTO productcategories (categoryname) VALUES ("Games & Toys")`);
 }
 
+
+// Seed for product receipts
+if (deleteMode) {
+    db.query("DROP TABLE IF EXISTS productreceipts")
+}
+
+db.query(`
+CREATE TABLE IF NOT EXISTS productreceipts(
+    id INT PRIMARY KEY AUTO_INCREMENT,
+    product_fk INT,
+    seller_fk INT,
+    buyer_fk INT
+)
+`);
