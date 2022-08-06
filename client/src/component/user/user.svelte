@@ -17,7 +17,7 @@
 <style>
 
     .user {
-        background-color: #858585;
+        background-color: #31394c;
         color: white;
     }
 

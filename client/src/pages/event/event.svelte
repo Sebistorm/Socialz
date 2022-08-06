@@ -185,15 +185,17 @@ img {
 }
 
 .contentWrapper {
-        display: grid;
-        grid-template-columns: 1.5fr 1fr;
-        grid-column-gap: 2rem;
-    }
+    display: grid;
+    grid-template-columns: 1.5fr 1fr;
+    grid-column-gap: 2rem;
+}
 
 .guestListWrapper {
-    background-color: #ebebeb;
+    background-color: #31394c;
     padding: 0.5rem 1rem 1.5rem;
     border: 1px solid black;
+    color: white;
+    box-shadow: 0px 0px 15px 3px #000000;
 }
 
 .guestListContent {

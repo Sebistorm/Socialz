@@ -56,7 +56,8 @@
 			<Link to="/">Home</Link>
 			<Link to="signup">Signup</Link>
 			<Link to="login">Login</Link>
-			<Link to="profile">profile</Link>
+			<Link to="profile/">profile1</Link>
+			<Link to="users/4">profile2</Link>
 			<Link to="users">Users</Link>
 
 			<span>{userOnlineCount} users online</span> 

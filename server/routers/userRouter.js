@@ -69,6 +69,22 @@ router.delete("/users/:userID", (req, res) => {
 });
 
 
+// following showcase
+router.get("/users/:userID/following/showcase", (req, res) => {
+    connection.query("SELECT users.name, users.profilepicture, x.count FROM follows JOIN users ON follows.following_fk = users.id, (select count(*) as count FROM follows WHERE user_fk = ?) as x WHERE follows.user_fk = ? limit 9", [req.params.userID, req.params.userID], (error, results) => {
+        if(error) res.send({followingData: "error"});
+        if(results) res.send({followingData: results});
+    })
+});
+
+// followers showcase
+router.get("/users/:userID/followers/showcase", (req, res) => {
+    connection.query("select users.name, users.profilepicture, x.count FROM users JOIN follows ON users.id = follows.user_fk, (select count(*) as count FROM follows WHERE following_fk = ?) as x WHERE follows.following_fk = ? limit 9", [req.params.userID, req.params.userID], (error, results) => {
+        if(error) res.send({followersData: "error"});
+        if(results) res.send({followersData: results});
+    })
+});
+
 
 // following
 router.post("/users/:userID/following/:followingID", (req, res) => {
@@ -89,7 +105,7 @@ router.get("/users/:userID/following/:followingID", (req, res) => {
     connection.query("SELECT * FROM follows WHERE user_fk = ? AND following_fk = ?", [req.params.userID, req.params.followingID], (error, results) => {
         if(error) res.sendStatus(404);
         if(results) {
-            if(results.length == 0) {
+            if(results.length === 0) {
                 res.send({ status: false });
             } else {
                 res.send({ status: true });
@@ -97,6 +113,11 @@ router.get("/users/:userID/following/:followingID", (req, res) => {
         }
     })
 });
+
+
+
+
+
 
 
 // chat messages
