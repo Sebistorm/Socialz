@@ -1,4 +1,4 @@
-import Router  from "express";
+import Router from "express";
 const router = Router();
 
 import multer from "multer";
@@ -31,6 +31,30 @@ import connection from "../database/createMySQLConnection.js"
 
 import { authLimiter } from "../authorization/authorization.js"
 
+// user post
+
+router.get("/users/posts", (req, res) => {  
+    connection.query("SELECT posts.*, users.name, users.profilePicture FROM users_posts AS posts INNER JOIN users AS users ON posts.user_fk = users.id WHERE posts.user_fk = ? OR posts.user_fk IN (select following_fk from follows where user_fk = ?) ORDER BY posts.date desc", [req.session.userID, req.session.userID], (error, results) => {
+        if(error) res.send({usersPostsData: "error"});
+        if(results) res.send({usersPostsData: results});
+    })
+}); 
+
+router.post("/users/:userID/posts", (req, res) => {
+    console.log(req.body.userPostText);
+    connection.query("INSERT INTO users_posts (user_fk, text) VALUES(?,?)", [req.params.userID, req.body.userPostText], (error, results) => {
+        if(error) res.send({userPostData: "error"});
+        if(results) res.send({userPostData: "success"});
+    })
+});
+
+router.get("/users/:userID/posts", (req, res) => {
+    connection.query("SELECT * FROM users_posts WHERE user_fk = ? order by date desc", [req.params.userID], (error, results) => {
+        if(error) res.send({userPostsData: "error"});
+        if(results) res.send({userPostsData: results});
+    })
+});
+
 
 router.get("/users/", (req, res) => {    
     connection.query("SELECT id, name, profilepicture FROM users WHERE NOT id = ?", [req.session.userID] ,(error, results) => {
@@ -45,6 +69,7 @@ router.get("/users/:userID", (req, res) => {
         if(results) res.send({ userData: results });
     })
 });
+
 
 router.put("/users/:userID", (req, res) => {    
     connection.query("UPDATE users SET email = ?, name = ? WHERE id = ?", [req.body.email, req.body.name, req.params.userID], async (error, results) => {
@@ -69,6 +94,8 @@ router.delete("/users/:userID", (req, res) => {
 });
 
 
+
+
 // following showcase
 router.get("/users/:userID/following/showcase", (req, res) => {
     connection.query("SELECT users.name, users.profilepicture, x.count FROM follows JOIN users ON follows.following_fk = users.id, (select count(*) as count FROM follows WHERE user_fk = ?) as x WHERE follows.user_fk = ? limit 9", [req.params.userID, req.params.userID], (error, results) => {
@@ -84,6 +111,8 @@ router.get("/users/:userID/followers/showcase", (req, res) => {
         if(results) res.send({followersData: results});
     })
 });
+
+
 
 
 // following
@@ -113,8 +142,6 @@ router.get("/users/:userID/following/:followingID", (req, res) => {
         }
     })
 });
-
-
 
 
 

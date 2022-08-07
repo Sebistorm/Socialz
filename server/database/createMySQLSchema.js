@@ -81,7 +81,7 @@ CREATE TABLE IF NOT EXISTS events_invites(
 `);
 
 // Seed for Events posts
-if (!deleteMode) {
+if (deleteMode) {
     db.query("DROP TABLE IF EXISTS events_posts")
 }
 
@@ -95,7 +95,7 @@ CREATE TABLE IF NOT EXISTS events_posts(
 `);
 
 // Seed for products
-if (!deleteMode) {
+if (deleteMode) {
     db.query("DROP TABLE IF EXISTS products")
 }
 
@@ -149,5 +149,19 @@ CREATE TABLE IF NOT EXISTS productreceipts(
     product_fk INT,
     seller_fk INT,
     buyer_fk INT
+)
+`);
+
+// Seed for users posts
+if (deleteMode) {
+    db.query("DROP TABLE IF EXISTS users_posts")
+}
+
+db.query(`
+CREATE TABLE IF NOT EXISTS users_posts(
+    id INT PRIMARY KEY AUTO_INCREMENT,
+    user_fk INT,
+    text VARCHAR(255),
+    date VARCHAR(255) DEFAULT CURRENT_TIMESTAMP
 )
 `);

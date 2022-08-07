@@ -63,7 +63,7 @@
 
 
     let eventPostText;
-    async function handleSubmit(e) {
+    async function handleSubmitEventPost(e) {
         e.preventDefault();
         console.log("create post");
         const eventPostResponse = await fetch(`/events/${eventID}/posts/`, {
@@ -78,14 +78,13 @@
         const {eventPostData} = await eventPostResponse.json();
         if(eventPostData === "success") {
             const date = new Date();
-            const day = date.getDay();
+            const day = date.getDate();
             const month = date.getMonth()+1;
             const year = date.getFullYear();
             const hour = date.getHours();
             const min = date.getMinutes();
             const dateObject = day + '/' + month + '/' + year  + ' kl. ' + hour  + '.' + min;
             const newEventPost = {
-                title: title,
                 date: dateObject,
                 text: eventPostText
             }
@@ -133,7 +132,7 @@
         <div class="left">
             {#if createdby_fk === $user.id}
                 <div class="createEventPostWrapper">
-                    <form on:submit={handleSubmit}>
+                    <form on:submit={handleSubmitEventPost}>
                         <h2>Create Post</h2>
                         <textarea
                             bind:value={eventPostText}

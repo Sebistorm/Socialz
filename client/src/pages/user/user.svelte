@@ -6,6 +6,7 @@
     import {user} from "../../store/userStore";
     import { Link } from "svelte-navigator";
     import Showcase from "../../component/shared/showcase.svelte"
+    import Userpost from "../../component/user/userpost.svelte"
 
     let name;
     let email;
@@ -18,6 +19,8 @@
 
     let following = [];
     let followingCount = 0;
+
+    let userPosts = [];
 
     onMount(async () => {
         const response = await fetch(`/users/${id}`);
@@ -34,13 +37,23 @@
         let followersResponse = await fetch(`/users/${id}/followers/showcase`);
         let {followersData} = await followersResponse.json();
         followers = followersData;
-        followersCount = followersData[0].count;
+        console.log(followersData);
+        if(followersData.length > 0) {
+            followersCount = followersData[0].count;
+        }
 
         let followingResponse = await fetch(`/users/${id}/following/showcase`);
         let {followingData} = await followingResponse.json();
-        console.log(followingData);
         following = followingData;
-        followingCount = followingData[0].count;
+        if(followingData.length > 0) {
+            followingCount = followingData[0].count;
+        }
+        
+        //user posts
+        const userPostsResponse = await fetch(`/users/${id}/posts`);
+        const { userPostsData } = await userPostsResponse.json();
+        console.log(userPostsData);
+        userPosts = userPostsData;
 	});
 
 
@@ -79,7 +92,38 @@
     }
 
 
-
+    let userPostText;
+    async function handleSubmitUserPost(e) {
+        e.preventDefault();
+        console.log("user post")
+        const userPostResponse = await fetch(`/users/${id}/posts/`, {
+            method: "post",
+            headers: {
+                'content-type': 'application/json'
+            },
+            body: JSON.stringify({
+                userPostText: userPostText
+            })
+        })
+        const {userPostData} = await userPostResponse.json();
+        console.log(userPostData);
+        if(userPostData === "success") {
+            const date = new Date();
+            const day = date.getDate();
+            const month = date.getMonth()+1;
+            const year = date.getFullYear();
+            const hour = date.getHours();
+            const min = date.getMinutes();
+            const dateObject = day + '/' + month + '/' + year  + ' kl. ' + hour  + '.' + min;
+            const newUserPost = {
+                date: dateObject,
+                text: userPostText
+            }
+            userPosts = [{...newUserPost}, ...userPosts];
+            userPostText = "";
+            console.log(userPosts);
+        }
+    }
 
 </script>
 
@@ -93,14 +137,26 @@
             </div>
         </div>
         <div class="right d-flex align-items-end">
-            {#if followingUser == true}
-                <button on:click={handleDeleteFollowing} class="btn btn-primary me-2">Unfollow</button>
+            {#if $user.id === Number(id)}
+                <div class="right d-flex align-items-end">
+                    <p class="btn btn-primary me-2"><Link to="/editUser">Edit Profile</Link></p>
+                    <p class="btn btn-danger"><Link to="/confirmDeleteUser">Delete User</Link></p>
+                </div>
             {/if}
 
-            {#if followingUser == false}
-                <button on:click={handleAddFollowing} class="btn btn-primary me-2">follow</button>
+            {#if $user.id !== Number(id)}
+                {#if followingUser == true}
+                    <button on:click={handleDeleteFollowing} class="btn btn-primary me-2">Unfollow</button>
+                {/if}
+
+                {#if followingUser == false}
+                    <button on:click={handleAddFollowing} class="btn btn-primary me-2">follow</button>
+                {/if}
+                
+                <button class="btn btn-danger"><Link to="/messages/t/{id}">Chat messages</Link></button>
             {/if}
-            <button class="btn btn-danger"><Link to="/messages/t/{id}">Chat messages</Link></button>
+
+            
         </div>
     </div>
 </div>
@@ -113,7 +169,27 @@
             <Showcase title="Following" count={followingCount} showcaseItemsArray={following} />
         </div>
         <div class="right">
-            Create post
+            {#if Number(id) === $user.id} 
+                <div class="createUserPostWrapper pb-4">
+                    <form on:submit={handleSubmitUserPost}>
+                        <h2>Create Post</h2>
+                        <textarea
+                            bind:value={userPostText}
+                            type="text"
+                            name="eventPostText"
+                            placeholder="Something on your mind?"
+                        />
+                        <button class="btn btn-primary" type="submit">Post It</button>
+                    </form>
+                </div>
+            {/if}
+
+            <div class="userPostsWrapper pb-4">
+                {#each userPosts as userPost}
+                    <Userpost name={name} date={userPost.date} text={userPost.text} imgSrc={profilepicture} />
+	            {/each}
+
+            </div>
         </div>
     </div>
 </div>
@@ -140,6 +216,18 @@
     display: grid;
     grid-template-columns: 1fr 1.3fr;
     grid-column-gap: 2rem;
+}
+
+
+.createUserPostWrapper form {
+    background-color: #ebebeb;
+    padding: 0.5rem 1rem;
+    border: 1px solid black;
+}
+
+.createUserPostWrapper form textarea {
+    width: 100%;
+    border-radius: 10px;
 }
 
 </style>

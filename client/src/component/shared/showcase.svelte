@@ -10,7 +10,7 @@
 
 </script>
 
-<div class="showcaseWrapper mt-4 d-flex flex-column">
+<div class="showcaseWrapper mb-4 d-flex flex-column">
     <div class="header">
         <h2>{title} ({count})</h2> 
         <Link class="text-blue" to="/users/{$user.id}/{title.toLowerCase()}">See all {title}</Link>

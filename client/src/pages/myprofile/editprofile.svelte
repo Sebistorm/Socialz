@@ -36,7 +36,7 @@
 		fetch(`/users/${$user.id}`, fetchOptions)
 		.then(async data =>  { 
 			if (data.status === 200) {
-                const from = ($location.state && $location.state.from) || "/profile";
+                const from = ($location.state && $location.state.from) || `/users/${$user.id}`;
                 navigate(from, { replace: true });
 			}
 		});
@@ -52,7 +52,7 @@
 			body: formData
 		}).then(async data =>  { 
 			if (data.status === 200) {
-                const from = ($location.state && $location.state.from) || "/profile";
+                const from = ($location.state && $location.state.from) || `/users/${$user.id}`;
                 navigate(from, { replace: true });
 			}
 		});
