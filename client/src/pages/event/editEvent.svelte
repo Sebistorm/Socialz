@@ -14,7 +14,8 @@
         id: id,
         title: null,
         date: null,
-        description: null
+        description: null,
+		createdby_fk: null
     }
 
     onMount(async () => {
@@ -24,6 +25,7 @@
         event.title = eventData[0].title;
         event.date = eventData[0].date;
         event.description = eventData[0].description;
+		event.createdby_fk = eventData[0].createdby_fk;
 	});
 
     async function handleSubmit(e) {
@@ -53,37 +55,37 @@
 
 </script>
 
+{#if event.createdby_fk === $user.id}
+	<div class="container">
+		<h1>Edit Event</h1>
+		<div class="editWrapper">
+			<form on:submit={handleSubmit}>
+				<label for="email">Title</label>
+				<input
+					bind:value={event.title}
+					type="text"
+					name="title"
+					placeholder="title"
+				/>
+				<label for="description">description</label>
+				<textarea
+					bind:value={event.description}
+					type="text"
+					name="description"
+					class="w-100"
+				/>
+				<label for="date">Date</label>
+				<input
+					bind:value={event.date}
+					type="date"
+					name="date"
+				/>
+				<button type="submit">Save</button>
+			</form> 
 
-<div class="container">
-    <h1>Edit Profile</h1>
-	<div class="editWrapper">
-		<form on:submit={handleSubmit}>
-			<label for="email">Title</label>
-			<input
-				bind:value={event.title}
-				type="text"
-				name="title"
-				placeholder="title"
-			/>
-            <label for="description">description</label>
-			<textarea
-				bind:value={event.description}
-				type="text"
-				name="description"
-                class="w-100"
-			/>
-			<label for="date">Date</label>
-			<input
-				bind:value={event.date}
-				type="date"
-				name="date"
-			/>
-			<button type="submit">Save</button>
-		</form> 
-
-	</div> 
-</div>
-
+		</div> 
+	</div>
+{/if}
 <style>
     input {
 	width: 100%;

@@ -5,8 +5,8 @@
 	const navigate = useNavigate();
 	const location = useLocation();
 
-	$: if (!($user)) {
-		navigate("/", {
+	$: if (!$user) {
+		navigate("/login", {
 			state: { from: $location.pathname },
 			replace: true,
 		});

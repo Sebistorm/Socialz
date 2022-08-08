@@ -16,7 +16,7 @@
             }
 		}
 
-		fetch(`/users/${$user.id}`, fetchOptions)
+		fetch(`/users`, fetchOptions)
 		.then(async data =>  { 
 			if (data.status === 200) {
                 const from = ($location.state && $location.state.from) || "/";

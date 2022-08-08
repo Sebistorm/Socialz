@@ -33,7 +33,7 @@
 			body: userObjectString
 		}
 
-		fetch(`/users/${$user.id}`, fetchOptions)
+		fetch(`/users`, fetchOptions)
 		.then(async data =>  { 
 			if (data.status === 200) {
                 const from = ($location.state && $location.state.from) || `/users/${$user.id}`;
@@ -47,7 +47,7 @@
 		const formData = new FormData();
 		formData.append("profilepicture", profilepicture[0]);
 		
-		fetch(`/users/${$user.id}`, {
+		fetch(`/users`, {
 			method: 'PATCH',
 			body: formData
 		}).then(async data =>  { 

@@ -10,9 +10,7 @@
     onMount(async () => {
         const peopleToInviteResponse = await fetch(`/events/${id}/invite`);
 		const { peopleToInviteData } = await peopleToInviteResponse.json();
-        console.log(peopleToInviteData);
         peopleToInvite = peopleToInviteData;
-        console.log(peopleToInvite)
 	});
 
 </script>
