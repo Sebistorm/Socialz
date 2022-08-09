@@ -41,14 +41,13 @@ io.on("connection", (socket) => {
 
     socket.on("messageSent", (msg, anotherSocketId) => {
         socket.to(anotherSocketId).emit("privateMessage", msg);   
-    }) 
+    }); 
 
-    socket.on("logout", (count) => {
-        count--
-        socket.broadcast.emit("userOnline", count);  
-    })
+    socket.on("logout", () => {
+        count-- 
+    }); 
 
-});
+}); 
 
 
 import userRouter from "./routers/userRouter.js";

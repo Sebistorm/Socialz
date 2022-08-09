@@ -4,10 +4,9 @@
     let users = [];
 
     onMount(async () => {
-            const response = await fetch("/users");
-            const { data } = await response.json();
-            console.log(data);
-            users = data
+        const usersresponse = await fetch("/users");
+        const { usersData } = await usersresponse.json();
+        users = usersData;
     });   
 
 </script>

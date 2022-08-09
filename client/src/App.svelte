@@ -40,10 +40,14 @@
 		userOnlineCount = count;
     }); 
 
-	function handleLogout() {
+	async function handleLogout() {
 		socket.emit('logout', userOnlineCount);
 		console.log("logout")
-		$user = null;
+		const logOutResponse = await fetch(`/logout`);
+		const { logOutData } = await logOutResponse.json();
+		if(logOutData === "success") {
+			$user = null;
+		}
 	}
 
 </script>

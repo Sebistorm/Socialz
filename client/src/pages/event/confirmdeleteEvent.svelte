@@ -1,9 +1,9 @@
 <script>
+    import { useNavigate, useLocation } from "svelte-navigator";
+    import {user} from "../../store/userStore"
 
     let url_string = window.location.pathname;
     let id = url_string.split("confirmDeleteEvent/")[1]
-
-    import { useNavigate, useLocation } from "svelte-navigator";
 
     const navigate = useNavigate();
     const location = useLocation();
@@ -11,20 +11,16 @@
     async function handleDeleteEvent(e) {
 		e.preventDefault();
 
-		const fetchOptions = {
-            method: "delete",
-            headers: {
-                "Content-Type": "application/json"
-            }
-		}
 
-		fetch(`/events/${id}`, fetchOptions)
-		.then(async data =>  { 
-			if (data.status === 200) {
-                const from = ($location.state && $location.state.from) || "/";
-                navigate(from, { replace: true });
-			}
-		});
+        const deleteEventResponse = await fetch(`/events/${id}`, {
+            method: "delete"
+        })
+        const {deleteEventData} = await deleteEventResponse.json();
+        console.log(deleteEventData);
+        if(deleteEventData === "success") {
+            const from = ($location.state && $location.state.from) || `/users/${$user.id}/events`;
+            navigate(from, { replace: true });
+        }
 	}
 
 </script>

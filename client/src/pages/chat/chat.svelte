@@ -18,11 +18,9 @@
 		const chatResponse = await fetch(`/users/${$user.id}/person/${id}`);
 		const { chatData } = await chatResponse.json();
         chatMessages = chatData;
-        //console.log(chatMessages)
 
-        const personResponse = await fetch(`/users/${id}`);
-		const { userData } = await personResponse.json();
-        //console.log(userData);
+        const userResponse = await fetch(`/users/${id}`);
+		const { userData } = await userResponse.json();
         personName = userData[0].name;
         personProfilepicture = userData[0].profilepicture
 
@@ -44,38 +42,33 @@
 
 
 
-    let chatMessage = {
-        chatMessage: ""
-    };
+    let chatMessage = "";
+    
 
-    function handleSubmit (e) {
+    async function handleCreateMessage (e) {
         e.preventDefault();
-        if(chatMessage.chatMessage.length > 0) {    
-            let messageObjectString = JSON.stringify(chatMessage);
-
-            const fetchOptions = {
-            method: "POST",
-            headers: {
-                "Content-Type": "application/json"
+        if(chatMessage.length > 0) {
+            const userMesssageResponse = await fetch(`/users/${$user.id}/person/${id}`, {
+                method: "post",
+                headers: {
+                    'content-type': 'application/json'
                 },
-            body: messageObjectString
-            }
-
-            fetch(`/users/${$user.id}/person/${id}`, fetchOptions)
-            .then(async data =>  { 
-                console.log(data);
-                
-                socket.emit("messageSent", chatMessage.chatMessage, Number(id));
+                body: JSON.stringify({
+                    chatMessage:chatMessage
+                })
+            })
+            const {userMesssageData} = await userMesssageResponse.json();
+            console.log(userMesssageData);
+            if(userMesssageData === "success") {
+                socket.emit("messageSent", chatMessage, Number(id));
                 const newMessageFromAnotherUser = {
                     user_fk: $user.id,
                     personname: $user.name,
-                    chatmessage: chatMessage.chatMessage
+                    chatmessage: chatMessage
                 }
                 chatMessages = [...chatMessages, {...newMessageFromAnotherUser}];
-                chatMessage.chatMessage = ""
-            });
-        } else {
-            console.log("YOu have to write more than 1 letter")
+                chatMessage = ""
+            }
         }
         
     }
@@ -85,8 +78,8 @@
     <div class="chatWrapper">
         <div class="chatWindow">
             <div class="chatTyping">
-                <form on:submit={handleSubmit} class="d-flex">
-                    <textarea bind:value={chatMessage.chatMessage} name="chatMessage"></textarea>
+                <form on:submit={handleCreateMessage} class="d-flex">
+                    <textarea bind:value={chatMessage} name="chatMessage"></textarea>
                     <input class="btn btn-primary" type="submit">
                 </form>
             </div>
@@ -108,7 +101,6 @@
             <div class="userWrapper">
                 <div class="userImgWrapper">
                     <img src="/{personProfilepicture}" alt="{personName}">
-                    <div id="userStatus"></div>
                 </div>
                 <h4 class="mt-3">{personName}</h4>
             </div>
@@ -142,7 +134,6 @@
     .userImgWrapper {
         display: flex;
         flex-direction: column;
-        position: relative;
         align-items: center;
     }
 
@@ -150,16 +141,6 @@
         width: 200px;
         height: 200px;
         object-fit: cover;
-    }
-
-    #userStatus {
-        width: 40px;
-        height: 40px;
-        background-color: red;
-        border-radius: 100%;
-        position: absolute;
-        border: 2px solid white;
-        bottom: -10px;
     }
 
     .userWrapper h4 {

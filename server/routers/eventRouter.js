@@ -7,30 +7,30 @@ import { authLimiter, isLoggedIn } from "../authorization/authorization.js"
 
 
 router.post("/events/", [isLoggedIn] ,(req, res) => {    
-    connection.query("INSERT INTO events (title, description, date, createdby_fk) VALUES(?,?,?,?)", [req.body.title, req.body.description, req.body.date, req.body.createdby_fk] ,(error, results) => {
-        if(error) res.sendStatus(404);
-        if(results) res.sendStatus(200);
+    connection.query("INSERT INTO events (title, description, date, createdby_fk) VALUES(?,?,?,?)", [req.body.title, req.body.description, req.body.date, req.session.userID] ,(error, results) => {
+        if(error) res.send({ createEventData: "error" });
+        if(results) res.send({ createEventData: "success" });
     })
 });
 
 router.get("/events/:eventID", [isLoggedIn], (req, res) => {    
     connection.query("SELECT * from events WHERE id = ?", [req.params.eventID] ,(error, results) => {
-        if(error) res.sendStatus(404);
+        if(error) res.send({ eventData: "error" });
         if(results) res.send({ eventData: results });
     })
 });
 
 router.put("/events", [isLoggedIn], (req, res) => {    
     connection.query("UPDATE events SET title = ?, date = ?, description = ? WHERE id = ? AND createdby_fk = ?", [req.body.title, req.body.date, req.body.description, req.body.id, req.session.userID] ,(error, results) => {
-        if(error) res.sendStatus(404);
-        if(results) res.sendStatus(200);
+        if(error) res.send({ updateEventData: "error" });
+        if(results) res.send({ updateEventData: "success" });
     })
 });
 
 router.delete("/events/:eventID", [isLoggedIn, authLimiter], (req, res) => {    
     connection.query("DELETE FROM events WHERE id = ? AND createdby_fk = ?", [req.params.eventID, req.session.userID], (error, results) => {
-        if(error) res.sendStatus(404);
-        if(results) res.sendStatus(200);
+        if(error) res.send({ deleteEventData: "error" });
+        if(results) res.send({ deleteEventData: "success" });
     })
 });
 
@@ -38,7 +38,7 @@ router.delete("/events/:eventID", [isLoggedIn, authLimiter], (req, res) => {
 // Event's Users
 router.get("/events/:eventID/users", [isLoggedIn], (req, res) => {    
     connection.query("SELECT users.id, users.name, users.profilepicture, events_invites.status from users JOIN events_invites ON users.id = events_invites.user_fk WHERE event_fk = ?", [req.params.eventID] ,(error, results) => {
-        if(error) res.sendStatus(404);
+        if(error) res.send({ invitedPeopleData: "error" });
         if(results) res.send({ invitedPeopleData: results });
     })
 });

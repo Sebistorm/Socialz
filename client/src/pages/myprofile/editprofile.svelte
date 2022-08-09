@@ -3,60 +3,54 @@
     import {user} from "../../store/userStore";
 
     import { useNavigate, useLocation } from "svelte-navigator";
-	
-	const navigate = useNavigate();
-	const location = useLocation();
 
     let name;
     let email;
 	let profilepicture;
+	let resmsg = "";
 
     onMount(async () => {
-		const response = await fetch(`/users/${$user.id}`);
-		const { userData } = await response.json();
+		const userresponse = await fetch(`/users/${$user.id}`);
+		const { userData } = await userresponse.json();
         console.log(userData);
         name = userData[0].name;
         email = userData[0].email;
 	});
 
-    async function handleSubmit(e) {
+    async function handleUpdateUser(e) {
 		e.preventDefault();
-        user.email = email;
+		user.email = email;
 		user.name = name
-		let userObjectString = JSON.stringify(user);
-
-		const fetchOptions = {
-			method: "PUT",
-			headers: {
-				"Content-Type": "application/json"
-			},
-			body: userObjectString
+		const updateUserResponse = await fetch(`/users`, {
+            method: "put",
+            headers: {
+                'content-type': 'application/json'
+            },
+            body: JSON.stringify(user)
+        })
+        const {updateUserData} = await updateUserResponse.json();
+        console.log(updateUserData);
+        if(updateUserData === "success") {
+            resmsg = "The informations has been updated"
+        } else {
+			resmsg = "Something went wrong"
 		}
-
-		fetch(`/users`, fetchOptions)
-		.then(async data =>  { 
-			if (data.status === 200) {
-                const from = ($location.state && $location.state.from) || `/users/${$user.id}`;
-                navigate(from, { replace: true });
-			}
-		});
 	}
 
 	async function handleUpdateProfilePicture(e) {
 		e.preventDefault();
-		const formData = new FormData();
+        const formData = new FormData();
 		formData.append("profilepicture", profilepicture[0]);
-		
-		fetch(`/users`, {
-			method: 'PATCH',
-			body: formData
-		}).then(async data =>  { 
-			if (data.status === 200) {
-                const from = ($location.state && $location.state.from) || `/users/${$user.id}`;
-                navigate(from, { replace: true });
-			}
-		});
-
+        
+        const updateUserImageResponse = await fetch(`/users`, {
+            method: "PATCH",
+            body: formData
+        })
+        const {updateUserImageData} = await updateUserImageResponse.json();
+        console.log(updateUserImageData);
+        if(updateUserImageData === "success") {
+            resmsg = "The picture was updated"
+        }
 	}
 
 
@@ -66,14 +60,16 @@
 
 <div class="container">
     <h1>Edit Profile</h1>
+	<p>{resmsg}</p>
 	<div class="editWrapper">
-		<form on:submit={handleSubmit}>
+		<form on:submit={handleUpdateUser}>
 			<label for="email">email</label>
 			<input
 				bind:value={email}
 				type="text"
 				name="email"
 				placeholder="email"
+				required
 			/>
 			<label for="name">Name</label>
 			<input
@@ -81,6 +77,7 @@
 				type="text"
 				name="name"
 				placeholder="name"
+				required
 			/>
 			<button type="submit">Save</button>
 		</form>
@@ -91,6 +88,7 @@
 				bind:files="{profilepicture}"
 				type="file"
 				name="profilepicture"
+				required
 			/>
 			<button type="submit">Update</button>
 		</form>

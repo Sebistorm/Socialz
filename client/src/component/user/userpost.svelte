@@ -3,9 +3,6 @@
     export let date;
     export let text;
     export let imgSrc
-
-    const [year, month, day, hour , min]= date.split(/[- :]/);
-    const dateObject = day + '/' + month + '/' + year  + ' kl. ' + hour  + '.' + min;
 </script>
 <div class="userPost d-flex flex-column mb-4">
     <div class="header">
@@ -13,7 +10,7 @@
             <img class="me-3" src="/{imgSrc}" alt={name}>
             <h3>{name}</h3>
         </div>
-        <p>{dateObject}</p>
+        <p>{date}</p>
     </div>
     <div class="body">
         <p>{text}</p>

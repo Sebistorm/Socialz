@@ -3,13 +3,11 @@
     export let date;
     export let text;
 
-    const [year, month, day, hour , min]= date.split(/[- :]/);
-    const dateObject = day + '/' + month + '/' + year  + ' kl. ' + hour  + '.' + min;
 </script>
 <div class="eventPost d-flex flex-column mt-4">
     <div class="header">
         <h3>{title}</h3>
-        <p>{dateObject}</p>
+        <p>{date}</p>
     </div>
     <div class="body">
         <p>{text}</p>

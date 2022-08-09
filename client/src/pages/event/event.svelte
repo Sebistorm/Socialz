@@ -83,7 +83,7 @@
             const year = date.getFullYear();
             const hour = date.getHours();
             const min = date.getMinutes();
-            const dateObject = day + '/' + month + '/' + year  + ' kl. ' + hour  + '.' + min;
+            const dateObject = year + '-' + month + '-' + day  + ' ' + hour  + ':' + min;
             const newEventPost = {
                 date: dateObject,
                 text: eventPostText

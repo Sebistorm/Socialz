@@ -1,43 +1,37 @@
 <script>
+	import { useNavigate, useLocation } from "svelte-navigator";
+	import {user} from "../../store/userStore";
 
-    import {user} from "../../store/userStore";
+	const navigate = useNavigate();
+	const location = useLocation();
 
     let event = {
         title: null,
         description: null,
-        date: null,
-        createdby_fk: $user.id
+        date: null
     }
 
-    async function handleSubmit(e) {
+    async function handleCreateEvent(e) {
 		e.preventDefault();
-		console.log("hej")
-        console.log(event.date);
-
-        let eventObjectString = JSON.stringify(event);
-        console.log(eventObjectString);
-
-		const fetchOptions = {
-		method: "POST",
-		headers: {
-			"Content-Type": "application/json"
-		},
-		body: eventObjectString
+		const createEventResponse = await fetch("/events", {
+			method: "post",
+			headers: {
+				'content-type': 'application/json'
+			},
+			body: JSON.stringify(event)
+		})
+		const {createEventData} = await createEventResponse.json();
+		console.log(createEventData);
+		if(createEventData === "success") {
+			const from = ($location.state && $location.state.from) || `/users/${$user.id}/events`;
+			navigate(from, { replace: true });
 		}
-
-		fetch("/events", fetchOptions)
-		.then(data =>  {
-			console.log(data);
-			// Send it to login
-            //const from = ($location.state && $location.state.from) || "/login";
-			//navigate(from, { replace: true });
-		});
 	}
 </script>
 
 
 <div id="createEventWrapper" class="container">
-	<form on:submit={handleSubmit}>
+	<form on:submit={handleCreateEvent}>
 		<h3>Create Event</h3>
 		<label for="name">Title</label>
 		<input

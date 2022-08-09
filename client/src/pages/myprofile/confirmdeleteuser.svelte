@@ -1,28 +1,16 @@
 <script>
     import {user} from "../../store/userStore";
 
-    import { useNavigate, useLocation } from "svelte-navigator";
-
-    const navigate = useNavigate();
-    const location = useLocation();
-
     async function handleDeleteUser(e) {
-		e.preventDefault();
-
-		const fetchOptions = {
-            method: "delete",
-            headers: {
-                "Content-Type": "application/json"
-            }
-		}
-
-		fetch(`/users`, fetchOptions)
-		.then(async data =>  { 
-			if (data.status === 200) {
-                const from = ($location.state && $location.state.from) || "/";
-                navigate(from, { replace: true });
-			}
-		});
+        e.preventDefault();
+        const deleteUserResponse = await fetch(`/users`, {
+            method: "delete"
+        })
+        const {deleteUserData} = await deleteUserResponse.json();
+        console.log(deleteUserData);
+        if(deleteUserData === "success") {
+            $user = null;
+        }
 	}
 
 </script>

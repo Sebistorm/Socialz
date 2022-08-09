@@ -1,8 +1,8 @@
 <script>
 	import { useNavigate, useLocation } from "svelte-navigator";
 	
-	//const navigate = useNavigate();
-	//const location = useLocation();
+	const navigate = useNavigate();
+	const location = useLocation();
 
 	let user = {
         email: null,
@@ -10,32 +10,33 @@
 		password: null,
 	};
 
-	async function handleSubmit(e) {
+	let resmsg = "";
+
+	async function handleCreateUser(e) {
 		e.preventDefault();
-		let userObjectString = JSON.stringify(user);
-
-		const fetchOptions = {
-		method: "POST",
-		headers: {
-			"Content-Type": "application/json"
-		},
-		body: userObjectString
+		const createUserResponse = await fetch(`/users`, {
+            method: "post",
+            headers: {
+                'content-type': 'application/json'
+            },
+            body: JSON.stringify(user)
+        })
+        const {createUserData} = await createUserResponse.json();
+        console.log(createUserData);
+		if(createUserData === "success") {
+			const from = ($location.state && $location.state.from) || "/login";
+			navigate(from, { replace: true });
+		} else {
+			resmsg = "something went wrong"
 		}
-
-		fetch("/users", fetchOptions)
-		.then(data =>  {
-			console.log(data);
-			// Send it to login
-            //const from = ($location.state && $location.state.from) || "/login";
-			//navigate(from, { replace: true });
-		});
 	}
 
 </script>
 
 <div id="signupWrapper" class="container">
-	<form on:submit={handleSubmit}>
+	<form on:submit={handleCreateUser}>
 		<h3>Signup</h3>
+		<p>{resmsg}</p>
 		<label for="email">Email</label>
 		<input
 			bind:value={user.email}

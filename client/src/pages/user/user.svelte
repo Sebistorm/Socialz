@@ -23,21 +23,19 @@
     let userPosts = [];
 
     onMount(async () => {
-        const response = await fetch(`/users/${id}`);
-		const { userData } = await response.json();
-        console.log(userData);
+        const userResponse = await fetch(`/users/${id}`);
+		const { userData } = await userResponse.json();
         name = userData[0].name;
         email = userData[0].email;
         profilepicture = userData[0].profilepicture
 
         let followingUserResponse = await fetch(`/users/${$user.id}/following/${id}`);
-        let status  = await followingUserResponse.json();
-        followingUser = status.status;
+        let {followingStatus}  = await followingUserResponse.json();
+        followingUser = followingStatus;
 
         let followersResponse = await fetch(`/users/${id}/followers/showcase`);
         let {followersData} = await followersResponse.json();
         followers = followersData;
-        console.log(followersData);
         if(followersData.length > 0) {
             followersCount = followersData[0].count;
         }
@@ -52,50 +50,34 @@
         //user posts
         const userPostsResponse = await fetch(`/users/${id}/posts`);
         const { userPostsData } = await userPostsResponse.json();
-        console.log(userPostsData);
         userPosts = userPostsData;
 	});
 
 
     async function handleAddFollowing() {
-        const fetchOptions = {
-            method: "POST",
-            headers: {
-                "Content-Type": "application/json"
-            }
+        const createFollowResponse = await fetch(`/users/${$user.id}/following/${id}`, {
+            method: "post",
+        })
+        const {createFollowData} = await createFollowResponse.json();
+        if (createFollowData === "success") {
+            followingUser = true;
 		}
-		fetch(`/users/${$user.id}/following/${id}`, fetchOptions)
-		.then(async data =>  { 
-            console.log(data);
-			if (data.status === 200) {
-                console.log("succes")
-                followingUser = true;
-			}
-		});
     }
 
     async function handleDeleteFollowing() {
-        const fetchOptions = {
+        const createUnfollowFollowResponse = await fetch(`/users/${$user.id}/following/${id}`, {
             method: "delete",
-            headers: {
-                "Content-Type": "application/json"
-            }
+        })
+        const {createUnFollowData} = await createUnfollowFollowResponse.json();
+        if (createUnFollowData === "success") {
+            followingUser = false;
 		}
-		fetch(`/users/${$user.id}/following/${id}`, fetchOptions)
-		.then(async data =>  { 
-            console.log(data);
-			if (data.status === 200) {
-                console.log("succes")
-                followingUser = false;
-			}
-		});
     }
 
 
     let userPostText;
     async function handleSubmitUserPost(e) {
         e.preventDefault();
-        console.log("user post")
         const userPostResponse = await fetch(`/users/${id}/posts/`, {
             method: "post",
             headers: {
@@ -114,7 +96,7 @@
             const year = date.getFullYear();
             const hour = date.getHours();
             const min = date.getMinutes();
-            const dateObject = day + '/' + month + '/' + year  + ' kl. ' + hour  + '.' + min;
+            const dateObject = year + '-' + month + '-' + day  + ' ' + hour  + ':' + min;
             const newUserPost = {
                 date: dateObject,
                 text: userPostText

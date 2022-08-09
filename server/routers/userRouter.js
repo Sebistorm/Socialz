@@ -57,38 +57,39 @@ router.get("/users/:userID/posts", [isLoggedIn], (req, res) => {
 
 router.get("/users/", [isLoggedIn], (req, res) => {    
     connection.query("SELECT id, name, profilepicture FROM users WHERE NOT id = ?", [req.session.userID] ,(error, results) => {
-        if(error) res.sendStatus(404);
-        if(results) res.send({ data: results });
+        if(error) res.send({ usersData: "error" });
+        if(results) res.send({ usersData: results });
     })
 });
 
 router.get("/users/:userID", [isLoggedIn], (req, res) => {    
     connection.query("SELECT email, name, profilepicture FROM users WHERE id = ?", [req.params.userID], (error, results) => {
-        if(error) res.sendStatus(404);
+        if(error) res.send({ userData: "error" });
         if(results) res.send({ userData: results });
     })
 });
 
 
-router.put("/users", [isLoggedIn], (req, res) => {    
+router.put("/users", [isLoggedIn], (req, res) => {
+    console.log(req.body);    
     connection.query("UPDATE users SET email = ?, name = ? WHERE id = ?", [req.body.email, req.body.name, req.session.userID], async (error, results) => {
-        if(error) res.sendStatus(404);
-        if(results) res.sendStatus(200);
+        if(error) res.send({ updateUserData: "error" });
+        if(results) res.send({ updateUserData: "success" });
     }) 
 });
 
 // for profilepicture
 router.patch("/users", [upload.single("profilepicture"), isLoggedIn] ,(req, res) => {    
     connection.query("UPDATE users SET profilepicture = ? WHERE id = ?", [req.file.path, req.session.userID], async (error, results) => {
-        if(error) res.sendStatus(404);
-        if(results) res.sendStatus(200);
+        if(error) res.send({ updateUserImageData: "error" });
+        if(results) res.send({ updateUserImageData: "success" });
     }) 
 });
 
 router.delete("/users", [isLoggedIn, authLimiter], (req, res) => {    
     connection.query("DELETE FROM users WHERE id = ?", [req.session.userID], (error, results) => {
-        if(error) res.sendStatus(404);
-        if(results) res.sendStatus(200);
+        if(error) res.send({ deleteUserData: "error" });
+        if(results) res.send({ deleteUserData: "success" });
     })
 });
 
@@ -116,27 +117,27 @@ router.get("/users/:userID/followers/showcase", [isLoggedIn], (req, res) => {
 
 // following
 router.post("/users/:userID/following/:followingID", [isLoggedIn], (req, res) => {
-    connection.query("INSERT INTO follows (user_fk, following_fk) VALUES(?,?)", [req.params.userID, req.params.followingID], (error, results) => {
-        if(error) res.sendStatus(404);
-        if(results) res.sendStatus(200);
+    connection.query("INSERT INTO follows (user_fk, following_fk) VALUES(?,?)", [req.session.userID, req.params.followingID], (error, results) => {
+        if(error) res.send({createFollowData: "error"});
+        if(results) res.send({createFollowData: "success"});
     })
 });
 
 router.delete("/users/:userID/following/:followingID", [isLoggedIn, authLimiter], (req, res) => {
-    connection.query("DELETE FROM follows WHERE user_fk = ? AND following_fk = ?", [req.params.userID, req.params.followingID], (error, results) => {
-        if(error) res.sendStatus(404);
-        if(results) res.sendStatus(200);
+    connection.query("DELETE FROM follows WHERE user_fk = ? AND following_fk = ?", [req.session.userID, req.params.followingID], (error, results) => {
+        if(error) res.send({createUnFollowData: "error"});
+        if(results) res.send({createUnFollowData: "success"});
     })
 });
 
 router.get("/users/:userID/following/:followingID", [isLoggedIn], (req, res) => {
     connection.query("SELECT * FROM follows WHERE user_fk = ? AND following_fk = ?", [req.params.userID, req.params.followingID], (error, results) => {
-        if(error) res.sendStatus(404);
+        if(error) res.send({followingStatus: error});
         if(results) {
             if(results.length === 0) {
-                res.send({ status: false });
+                res.send({followingStatus: false});
             } else {
-                res.send({ status: true });
+                res.send({followingStatus: true});
             }
         }
     })
@@ -149,15 +150,15 @@ router.get("/users/:userID/following/:followingID", [isLoggedIn], (req, res) => 
 // chat messages
 router.post("/users/:userID/person/:personID", [isLoggedIn], (req, res) => {
     connection.query("INSERT INTO chatmessages (user_fk, person_fk, chatmessage) VALUES(?,?,?)", [req.params.userID, req.params.personID, req.body.chatMessage], (error, results) => {
-        if(error) res.sendStatus(404);
-        if(results) res.sendStatus(200);
+        console.log(req.body);
+        if(error) res.send({ userMesssageData: "error" });
+        if(results) res.send({ userMesssageData: "success" });
     })
 });
 
 router.get("/users/:userID/person/:personID", [isLoggedIn], (req, res) => {
     connection.query("SELECT chatmessages.id, chatmessages.chatmessage, chatmessages.user_fk , users.name as personname from chatmessages JOIN users ON chatmessages.user_fk = users.id WHERE user_fk = ? AND person_fk = ? OR user_fk = ? AND person_fk = ?", [req.params.userID, req.params.personID, req.params.personID, req.params.userID], (error, results) => {
-        //console.log(results)
-        if(error) res.sendStatus(404);
+        if(error) res.send({ chatData: "error" });
         if(results) res.send({ chatData: results });
     })
 });
@@ -165,12 +166,22 @@ router.get("/users/:userID/person/:personID", [isLoggedIn], (req, res) => {
 
 // events
 router.get("/users/:userID/events", [isLoggedIn], (req, res) => {
-    connection.query("SELECT * from events WHERE id IN (select event_fk from events_invites where user_fk = ? ) OR createdby_fk = ?", [req.params.userID, req.params.userID], (error, results) => {
+    connection.query("SELECT * from events WHERE id IN (select event_fk from events_invites where user_fk = ? ) OR createdby_fk = ?", [req.session.userID, req.session.userID], (error, results) => {
         console.log(results)
-        if(error) res.sendStatus(404);
+        if(error) res.send({ myEventsData: "error" });
         if(results) res.send({ myEventsData: results });
     })
 });
+
+router.get("/logout", (req, res) => {
+    req.session.destroy((err) => {
+        if(err) {
+            res.send({logOutData: "error"})  
+        } else {
+            res.send({logOutData: "success"})
+        } 
+    })
+})
 
 
 
@@ -182,33 +193,48 @@ router.get("/users/:userID/events", [isLoggedIn], (req, res) => {
 
 // signup
 router.post("/users", authLimiter , async (req,res) => {
-    const saltRounds = 12;
-    const hashedPassword = await bcrypt.hash(req.body.password, saltRounds);
-    connection.query("INSERT INTO users (email, name, password) VALUES(?,?,?)", [req.body.email, req.body.name, hashedPassword], async (error, results) => {
-        if(error) res.sendStatus(404);
-        if(results) res.sendStatus(200);
-    });           
+    try {
+        const saltRounds = 12;
+        const hashedPassword = await bcrypt.hash(req.body.password, saltRounds);
+        connection.query("INSERT INTO users (email, name, password) VALUES(?,?,?)", [req.body.email, req.body.name, hashedPassword], async (error, results) => {
+            if(error) res.send({ createUserData: "error" });
+            if(results) res.send({ createUserData: "success" });
+        }); 
+    } catch (error) {
+        res.send({ createUserData: "error" });
+    }     
 });
 
 //login
-router.post("/users/login", authLimiter , (req, res) => {
-    connection.query("SELECT * FROM users WHERE email = ?", [req.body.email], async (error, results) => {
-        if(error) res.sendStatus(404);
-        if(results) {
-            // TODO check password is undefined
-            const isSame = await bcrypt.compare(req.body.password, results[0].password);
-            if (isSame) {
-                req.session.isLoggedIn = true;
-                req.session.userID = results[0].id;
-                res.send({ 
-                    id: results[0].id,
-                    name: results[0].name
-                });
-            } 
-            // if the password does not match with the user
-            if (!isSame) res.sendStatus(404);
-        }
-    })
+router.post("/users/login", authLimiter ,  (req, res) => {
+    try {
+        connection.query("SELECT * FROM users WHERE email = ?", [req.body.email], async (error, results) => {
+            if(error) res.send({ userLoginData: error });
+            if(results) {
+                if(results.length > 0) {
+                        const isSame = await bcrypt.compare(req.body.password, results[0].password);
+                    if (isSame) {
+                        req.session.isLoggedIn = true;
+                        req.session.userID = results[0].id;
+                        res.send({ userLoginData: {
+                            results: {
+                                id: results[0].id,
+                                name: results[0].name
+                            }, 
+                            status: "success" 
+                        }});
+                    } else {
+                        res.send({ userLoginData: "error" });
+                    } 
+                } else {
+                    res.send({ userLoginData: "error" });
+                }
+            }
+        })
+    } catch (error) {
+        res.send({ userLoginData: "error" });
+    }
+
 });
 
 

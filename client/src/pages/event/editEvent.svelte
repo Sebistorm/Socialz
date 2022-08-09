@@ -2,11 +2,6 @@
     import { onMount } from "svelte/internal";
     import {user} from "../../store/userStore";
 
-    import { useNavigate, useLocation } from "svelte-navigator";
-	
-	const navigate = useNavigate();
-	const location = useLocation();
-
     let url_string = window.location.pathname;
     let id = url_string.split("editEvent/")[1]
 
@@ -18,6 +13,8 @@
 		createdby_fk: null
     }
 
+	let resmsg = "";
+
     onMount(async () => {
 		const eventResponse = await fetch(`/events/${id}`);
 		const { eventData } = await eventResponse.json();
@@ -28,29 +25,24 @@
 		event.createdby_fk = eventData[0].createdby_fk;
 	});
 
-    async function handleSubmit(e) {
+    async function handleUpdateEvent(e) {
 		e.preventDefault();
-		let eventObjectString = JSON.stringify(event);
 
-		const fetchOptions = {
-			method: "PUT",
-			headers: {
-				"Content-Type": "application/json"
-			},
-			body: eventObjectString
+		const updateEventResponse = await fetch(`/events`, {
+            method: "put",
+            headers: {
+                'content-type': 'application/json'
+            },
+            body: JSON.stringify(event)
+        })
+        const {updateEventData} = await updateEventResponse.json();
+        console.log(updateEventData);
+        if(updateEventData === "success") {
+            resmsg = "The event has been updated"
+        } else {
+			resmsg = "Something went wrong"
 		}
-
-		fetch(`/events`, fetchOptions)
-		.then(async data =>  { 
-			if (data.status === 200) {
-                const from = ($location.state && $location.state.from) || `/events/${id}`;
-                navigate(from, { replace: true });
-			}
-		});
 	}
-
-	
-
 
 
 </script>
@@ -58,8 +50,9 @@
 {#if event.createdby_fk === $user.id}
 	<div class="container">
 		<h1>Edit Event</h1>
+		<p>{resmsg}</p>
 		<div class="editWrapper">
-			<form on:submit={handleSubmit}>
+			<form on:submit={handleUpdateEvent}>
 				<label for="email">Title</label>
 				<input
 					bind:value={event.title}
@@ -80,7 +73,7 @@
 					type="date"
 					name="date"
 				/>
-				<button type="submit">Save</button>
+				<button type="submit" class="mt-3">Save</button>
 			</form> 
 
 		</div> 

@@ -14,8 +14,33 @@
 		password: ""
 	}
 
-	async function handleSubmit(e) {
+	let resmsg = "";
+
+	async function handleUserLogin(e) {
 		e.preventDefault();
+		const userLoginResponse = await fetch("/users/login", {
+            method: "post",
+            headers: {
+                'content-type': 'application/json'
+            },
+            body: JSON.stringify(newUser)
+        })
+        const {userLoginData} = await userLoginResponse.json();
+		if(userLoginData.status === "success") {
+			user.set({ 
+				id: userLoginData.results.id,
+				name: userLoginData.results.name
+			});
+			socket.emit("userLoggedIn", userLoginData.results.id);
+			const from = ($location.state && $location.state.from) || "/";
+			navigate(from, { replace: true });
+		} else {
+			resmsg = "something went wrong"
+		}
+
+
+/*
+		
 		let userObjectString = JSON.stringify(newUser);
 		const fetchOptions = {
 		method: "POST",
@@ -38,13 +63,15 @@
                	navigate(from, { replace: true });
 			}
 		});
+		*/
 	}
 
 </script>
 
 <div id="loginCompontent" class="container">
-	<form on:submit={handleSubmit}>
+	<form on:submit={handleUserLogin}>
 		<h3>Login</h3>
+		<p>{resmsg}</p>
 		<label for="email">email</label>
 		<input
 			bind:value={newUser.email}
