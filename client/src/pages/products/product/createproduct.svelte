@@ -2,6 +2,10 @@
 
     import { onMount } from "svelte/internal";
     import {user} from "../../../store/userStore";
+    import { useNavigate, useLocation } from "svelte-navigator";
+	
+	const navigate = useNavigate();
+	const location = useLocation();
 
 
     let product = {
@@ -37,6 +41,10 @@
         })
         const {createProductData} = await createProductResponse.json();
         console.log(createProductData);
+        if(createProductData ==="success") {
+            const from = ($location.state && $location.state.from) || `/marketplace/users/${$user.id}/myproducts`;
+			navigate(from, { replace: true });
+        }
 		
 	}
 
@@ -63,7 +71,7 @@
 
 <div id="createEventWrapper" class="container">
 	<form on:submit={handleSubmit} enctype="multipart/form-data">
-		<h3>Create Event</h3>
+		<h3>Create Product</h3>
 		<label for="name">Title</label>
 		<input
 			bind:value={product.title}

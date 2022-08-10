@@ -2,11 +2,10 @@
     import { onMount } from "svelte/internal";
     import {user} from "../../store/userStore";
 
-    let url_string = window.location.pathname;
-    let id = url_string.split("editEvent/")[1]
+    export let eventID;
 
     let event = {
-        id: id,
+        id: eventID,
         title: null,
         date: null,
         description: null,
@@ -16,7 +15,7 @@
 	let resmsg = "";
 
     onMount(async () => {
-		const eventResponse = await fetch(`/events/${id}`);
+		const eventResponse = await fetch(`/events/${eventID}`);
 		const { eventData } = await eventResponse.json();
         console.log(eventData);
         event.title = eventData[0].title;

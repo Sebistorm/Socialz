@@ -3,8 +3,7 @@
     import { user } from "../../../store/userStore";
 	
 
-    let url_string = window.location.pathname;
-    let productID = url_string.split("marketplace/editproduct/")[1]
+    export let productID;
 
     let product = {
         title: "",

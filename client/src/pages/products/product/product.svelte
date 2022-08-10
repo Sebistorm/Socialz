@@ -1,11 +1,10 @@
 <script>
-    let url_string = window.location.pathname;
-    let productID = url_string.split("marketplace/products/")[1]
-
+    
     import { onMount } from "svelte";
     import { Link } from "svelte-navigator";
     import {user} from "../../../store/userStore";
 
+    export let productID;
     let title; 
     let price;
     let description;

@@ -1,10 +1,8 @@
 <script>
 
-    let url_string = window.location.pathname;
-    let productID = url_string.split("marketplace/confirmdeleteproduct/")[1]
-
     import { useNavigate, useLocation } from "svelte-navigator";
-
+    
+    export let productID;
     const navigate = useNavigate();
     const location = useLocation();
 

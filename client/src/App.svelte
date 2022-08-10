@@ -42,7 +42,6 @@
 
 	async function handleLogout() {
 		socket.emit('logout', userOnlineCount);
-		console.log("logout")
 		const logOutResponse = await fetch(`/logout`);
 		const { logOutData } = await logOutResponse.json();
 		if(logOutData === "success") {
@@ -99,74 +98,75 @@
 			<Route path="signup" component={UserSignup} />
 			<Route path="login" component={UserLogin} />
 
-			<PrivateRoute path="profile" let:location>
+			<PrivateRoute path="profile">
 				<UserProfile></UserProfile>
 			</PrivateRoute>
 
-			<PrivateRoute path="editUser" let:location>
+			<PrivateRoute path="editUser">
 				<UserEditProfile></UserEditProfile>
 			</PrivateRoute>
 
-			<PrivateRoute path="confirmDeleteUser" let:location>
+			<PrivateRoute path="confirmDeleteUser">
 				<UserConfirmDelete></UserConfirmDelete>
 			</PrivateRoute>
-			<PrivateRoute path="users" let:location>
+
+			<PrivateRoute path="users">
 				<Users></Users>
 			</PrivateRoute>
 
-			<PrivateRoute path="users/:id" let:location>
-				<User></User>
+			<PrivateRoute path="users/:id" let:params>
+				<User id={params.id}></User>
 			</PrivateRoute>
 
-			<PrivateRoute path="messages/t/:id" let:location>
-				<Chat></Chat>
+			<PrivateRoute path="messages/t/:id" let:params>
+				<Chat id={params.id}></Chat>
 			</PrivateRoute>
-			<PrivateRoute path="users/:id/events" let:location>
+			<PrivateRoute path="users/:id/events">
 				<MyEvents></MyEvents>
 			</PrivateRoute>
 
-			<PrivateRoute path="createevent" let:location>
+			<PrivateRoute path="createevent">
 				<EventCreate></EventCreate>
 			</PrivateRoute>
 
-			<PrivateRoute path="events/:id" let:location>
-				<Event></Event>
+			<PrivateRoute path="events/:id" let:params>
+				<Event eventID={params.id}></Event>
 			</PrivateRoute>
 
-			<PrivateRoute path="editEvent/:id" let:location>
-				<EventEdit></EventEdit>
+			<PrivateRoute path="editEvent/:id" let:params>
+				<EventEdit eventID={params.id}></EventEdit>
 			</PrivateRoute>
 
-			<PrivateRoute path="confirmDeleteEvent/:id" let:location>
-				<EventDelete></EventDelete>
+			<PrivateRoute path="confirmDeleteEvent/:id" let:params>
+				<EventDelete eventID={params.id}></EventDelete>
 			</PrivateRoute>
 
-			<PrivateRoute path="events/:id/invite" let:location>
-				<EventInvitePeople></EventInvitePeople>
+			<PrivateRoute path="events/:id/invite" let:params>
+				<EventInvitePeople eventID={params.id}></EventInvitePeople>
 			</PrivateRoute>
 
-			<PrivateRoute path="events/:id/users" let:location>
-				<EventGuestList></EventGuestList>
+			<PrivateRoute path="events/:id/users" let:params>
+				<EventGuestList eventID={params.id}></EventGuestList>
 			</PrivateRoute>
 
-			<PrivateRoute path="marketplace/create" let:location>
-				<ProductCreate></ProductCreate>
+			<PrivateRoute path="marketplace/create">
+				<ProductCreate ></ProductCreate>
 			</PrivateRoute>
 
-			<PrivateRoute path="marketplace/users/:id/myproducts" let:location>
+			<PrivateRoute path="marketplace/users/:id/myproducts">
 				<MyProducts></MyProducts>
 			</PrivateRoute>
 
-			<PrivateRoute path="marketplace/products/:id" let:location>
-				<Product></Product>
+			<PrivateRoute path="marketplace/products/:id" let:params>
+				<Product productID={params.id}></Product>
 			</PrivateRoute>
 
-			<PrivateRoute path="marketplace/editproduct/:id" let:location>
-				<ProductEdit></ProductEdit>
+			<PrivateRoute path="marketplace/editproduct/:id" let:params>
+				<ProductEdit productID={params.id}></ProductEdit>
 			</PrivateRoute>
 
-			<PrivateRoute path="marketplace/confirmdeleteproduct/:id" let:location>
-				<ProductDelete></ProductDelete>
+			<PrivateRoute path="marketplace/confirmdeleteproduct/:id" let:params>
+				<ProductDelete productID={params.id}></ProductDelete>
 			</PrivateRoute>
 
 		</div>

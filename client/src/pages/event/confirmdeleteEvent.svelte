@@ -2,8 +2,7 @@
     import { useNavigate, useLocation } from "svelte-navigator";
     import {user} from "../../store/userStore"
 
-    let url_string = window.location.pathname;
-    let id = url_string.split("confirmDeleteEvent/")[1]
+    export let eventID;
 
     const navigate = useNavigate();
     const location = useLocation();
@@ -12,7 +11,7 @@
 		e.preventDefault();
 
 
-        const deleteEventResponse = await fetch(`/events/${id}`, {
+        const deleteEventResponse = await fetch(`/events/${eventID}`, {
             method: "delete"
         })
         const {deleteEventData} = await deleteEventResponse.json();

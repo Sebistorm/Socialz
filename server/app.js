@@ -44,7 +44,8 @@ io.on("connection", (socket) => {
     }); 
 
     socket.on("logout", () => {
-        count-- 
+        count--; 
+        socket.broadcast.emit("userOnline", count);
     }); 
 
 }); 

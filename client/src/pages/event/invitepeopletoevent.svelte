@@ -1,14 +1,12 @@
 <script>
-    let url_string = window.location.pathname;
-    let id = url_string.split("/")[2]
-    console.log(id);
     import { onMount } from "svelte";
     import People from "../../component/event/peopletoinvite.svelte";
 
+    export let eventID;
     let peopleToInvite = [];
 
     onMount(async () => {
-        const peopleToInviteResponse = await fetch(`/events/${id}/invite`);
+        const peopleToInviteResponse = await fetch(`/events/${eventID}/invite`);
 		const { peopleToInviteData } = await peopleToInviteResponse.json();
         peopleToInvite = peopleToInviteData;
 	});
@@ -19,7 +17,7 @@
     <h1>Invite people</h1>
     <div class="row usersWrapper">
         {#each peopleToInvite as people}
-            <People profilepicture={people.profilepicture} name={people.name} userID={people.id} eventID={id} />
+            <People profilepicture={people.profilepicture} name={people.name} userID={people.id} eventID={eventID} />
 	    {/each}
     </div>
 </div>

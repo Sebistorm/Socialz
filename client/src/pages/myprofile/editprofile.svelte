@@ -53,7 +53,22 @@
         }
 	}
 
+	let imagepreviewsrc;
+    let showImage = false;
 
+    function onChange() {
+        const file = profilepicture[0];	
+        if (file) {
+            showImage = true;
+            const reader = new FileReader();
+            reader.addEventListener("load", function () {
+                imagepreviewsrc.setAttribute("src", reader.result);
+            });
+            reader.readAsDataURL(file);    
+            return;
+        } 
+        showImage = false; 
+    }
 
 </script>
 
@@ -86,10 +101,15 @@
 			<label for="email">Profile Picture</label>
 			<input
 				bind:files="{profilepicture}"
+				on:change={onChange}
 				type="file"
 				name="profilepicture"
 				required
 			/>
+			{#if showImage}
+				<h3>Image preview</h3>
+				<img bind:this={imagepreviewsrc} id="imagepreview" alt="Preview" /> 
+            {/if}
 			<button type="submit">Update</button>
 		</form>
 	</div>
@@ -126,5 +146,11 @@ label {
 	display: grid;
 	grid-template-columns: 1fr 1fr;
 	grid-column-gap: 2rem;
+}
+
+#imagepreview {
+    height: 200px;
+    object-fit: contain;
+    margin-bottom: 2rem;
 }
 </style>

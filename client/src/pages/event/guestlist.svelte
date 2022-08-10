@@ -1,17 +1,16 @@
 <script>
-    let url_string = window.location.pathname;
-    let id = url_string.split("/")[2]
-    console.log(id);
+    
     import { onMount } from "svelte";
     import Guest from "../../component/event/guest.svelte";
 
+    export let eventID;
     let invited = [];
     let attendees = [];
     let maybeAttending = [];
     let notAttending = [];
 
     onMount(async () => {
-        const invitedPeopleResponse = await fetch(`/events/${id}/users`);
+        const invitedPeopleResponse = await fetch(`/events/${eventID}/users`);
         const {invitedPeopleData} = await invitedPeopleResponse.json();
 
         invited = invitedPeopleData.filter(people => people.status === "Invited");

@@ -62,7 +62,7 @@ CREATE TABLE IF NOT EXISTS events(
     description VARCHAR(255),
     date VARCHAR(60),
     createdby_fk INT,
-    eventpicture VARCHAR(255) DEFAULT 'uploads/ano-user.png'
+    eventpicture VARCHAR(255) DEFAULT 'uploads/event.jpg'
 )
 `);
 

@@ -6,8 +6,8 @@
     import PersonChatMessage from "../../component/chat/personchatmessage.svelte"
 
     const socket = io();
-    let url_string = window.location.pathname;
-    let id = url_string.split("t/")[1]
+    
+    export let id;
 
     let chatMessages = [];
 

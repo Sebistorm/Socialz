@@ -1,7 +1,4 @@
 <script>
-    let url_string = window.location.pathname;
-    let eventID = url_string.split("events/")[1]
-
     import { onMount } from "svelte";
     import {user} from "../../store/userStore";
     import { Link } from "svelte-navigator";
@@ -9,6 +6,7 @@
     import GuestListCount from "../../component/event/guestListCount.svelte";
     import EventPost from "../../component/event/eventpost.svelte";
 
+    export let eventID;
     let title;
     let date;
     let eventpicture = "uploads/ano-user.png";

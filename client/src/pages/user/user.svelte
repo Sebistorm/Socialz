@@ -1,13 +1,11 @@
 <script>
-    let url_string = window.location.pathname;
-    let id = url_string.split("users/")[1]
-
     import { onMount } from "svelte";
     import {user} from "../../store/userStore";
     import { Link } from "svelte-navigator";
     import Showcase from "../../component/shared/showcase.svelte"
     import Userpost from "../../component/user/userpost.svelte"
-
+    
+    export let id;
     let name;
     let email;
     let profilepicture = "uploads/ano-user.png";
