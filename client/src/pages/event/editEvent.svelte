@@ -27,7 +27,7 @@
     async function handleUpdateEvent(e) {
 		e.preventDefault();
 
-		const updateEventResponse = await fetch(`/events`, {
+		const updateEventResponse = await fetch(`/events/${eventID}`, {
             method: "put",
             headers: {
                 'content-type': 'application/json'

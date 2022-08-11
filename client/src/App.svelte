@@ -27,6 +27,7 @@
 	import ProductCreate from "./pages/products/product/createproduct.svelte";
 	import ProductEdit from "./pages/products/product/editproduct.svelte";
 	import Product from "./pages/products/product/product.svelte";
+	import Products from "./pages/products/products/products.svelte";
 	import ProductDelete from "./pages/products/product/confirmdeleteproduct.svelte";
 
 
@@ -151,6 +152,10 @@
 
 			<PrivateRoute path="marketplace/create">
 				<ProductCreate ></ProductCreate>
+			</PrivateRoute>
+
+			<PrivateRoute path="marketplace/products">
+				<Products ></Products>
 			</PrivateRoute>
 
 			<PrivateRoute path="marketplace/users/:id/myproducts">

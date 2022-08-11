@@ -29,22 +29,40 @@ import connection from "../database/createMySQLConnection.js"
 
 import { authLimiter, isLoggedIn } from "../authorization/authorization.js"
 
-
-// product categories
-router.get("/products/categories", [isLoggedIn], (req, res) => {
+// GET
+// selects all products except the user products
+// Search by name
+router.get("/products", [isLoggedIn], (req, res) => {
+    //if req.query.title is undefined
+    if(!req.query.title) {
+        req.query.title = "";
+    }
     try {
-        connection.query("SELECT * FROM productcategories", [], async (error, results) => {
-            if(error) res.send({ categoriesData: "error" });
-            if(results) res.send({ categoriesData: results });
+        connection.query("SELECT id, title, price, productpicture FROM products WHERE title LIKE ? AND NOT seller_fk = ?", [req.query.title+"%", req.session.userID], async (error, results) => {
+            if(error) res.send({ productsData: "error" });
+            if(results) res.send({ productsData: results });
         }) 
     } catch (error) {
-        res.send({ categoriesData: "error" });
+        res.send({ productsData: "error" });
+    }
+});
+
+// GET
+// selects a product
+router.get("/products/:product_id", [isLoggedIn], (req, res) => {
+    try {
+        connection.query("SELECT products.id, products.title, products.price,  products.description, products.productpicture, products.seller_fk, products.category_fk, products.active ,users.email, users.name, productcategories.categoryname FROM products JOIN users ON products.seller_fk = users.id JOIN productcategories ON products.category_fk = productcategories.id WHERE products.id = ?", [req.params.product_id], async (error, results) => {
+            if(error) res.send({ ProductData: "error" });
+            if(results) res.send({ ProductData: results });
+        }) 
+    } catch (error) {
+        res.send({ ProductData: "error" });
     }
 });
 
 
-
-
+//POST
+// Creates a product
 router.post("/products", [upload.single("productpicture"), isLoggedIn] ,(req, res) => {
     try {
         connection.query("INSERT INTO products (title, description, price, productpicture, category_fk, seller_fk) VALUES(?,?,?,?,?,?)", [req.body.producttitle, req.body.description, req.body.price ,req.file.path, req.body.category_fk, req.body.seller_fk], async (error, results) => {
@@ -56,9 +74,11 @@ router.post("/products", [upload.single("productpicture"), isLoggedIn] ,(req, re
     }  
 });
 
-router.delete("/products/:productID", [isLoggedIn, authLimiter], (req, res) => {
+// DELETE
+// Deletes a product
+router.delete("/products/:product_id", [isLoggedIn, authLimiter], (req, res) => {
     try {
-        connection.query("DELETE FROM products WHERE id = ? AND seller_fk = ?", [req.params.productID, req.session.userID], async (error, results) => {  
+        connection.query("DELETE FROM products WHERE id = ? AND seller_fk = ?", [req.params.product_id, req.session.userID], async (error, results) => {  
             if(error) res.send({ deleteProductData: "error" });
             if(results) res.send({ deleteProductData: "success" }); 
         }) 
@@ -67,21 +87,11 @@ router.delete("/products/:productID", [isLoggedIn, authLimiter], (req, res) => {
     }  
 });
 
-
-router.get("/products/:productID", [isLoggedIn], (req, res) => {
+//PUT
+//Updates a product
+router.put("/products/:product_id", [isLoggedIn], (req, res) => {
     try {
-        connection.query("SELECT products.id, products.title, products.price,  products.description, products.productpicture, products.seller_fk, products.category_fk, products.active ,users.email, users.name, productcategories.categoryname FROM products JOIN users ON products.seller_fk = users.id JOIN productcategories ON products.category_fk = productcategories.id WHERE products.id = ?", [req.params.productID], async (error, results) => {
-            if(error) res.send({ ProductData: "error" });
-            if(results) res.send({ ProductData: results });
-        }) 
-    } catch (error) {
-        res.send({ ProductData: "error" });
-    }
-});
-
-router.put("/products/:productID", [isLoggedIn], (req, res) => {
-    try {
-        connection.query("UPDATE products SET title = ?, description = ?, price = ?, category_fk = ? WHERE id = ? AND seller_fk = ?", [req.body.title, req.body.description, req.body.price, req.body.category_fk, req.params.productID, req.session.userID], async (error, results) => {
+        connection.query("UPDATE products SET title = ?, description = ?, price = ?, category_fk = ? WHERE id = ? AND seller_fk = ?", [req.body.title, req.body.description, req.body.price, req.body.category_fk, req.params.product_id, req.session.userID], async (error, results) => {
             if(error) res.send({ updateProductData: "error" });
             if(results) res.send({ updateProductData: "success" });
         })
@@ -90,9 +100,11 @@ router.put("/products/:productID", [isLoggedIn], (req, res) => {
     }
 });
 
-router.put("/products/:productID/productpicture", [upload.single("productpicture"), isLoggedIn] ,(req, res) => {
+// PUT
+//Updates a products productpicture
+router.put("/products/:product_id/productpicture", [upload.single("productpicture"), isLoggedIn] ,(req, res) => {
     try {
-        connection.query("UPDATE products SET productpicture = ? WHERE id = ? AND seller_fk = ?", [req.file.path, req.params.productID, req.session.userID], async (error, results) => {
+        connection.query("UPDATE products SET productpicture = ? WHERE id = ? AND seller_fk = ?", [req.file.path, req.params.product_id, req.session.userID], async (error, results) => {
             if(error) res.send({ updateProductImageData: "error" });
             if(results) res.send({ updateProductImageData: "success" });
         }) 
@@ -102,9 +114,23 @@ router.put("/products/:productID/productpicture", [upload.single("productpicture
     
 });
 
+// GET
+// sort by category_id
+router.get("/products/sort/:category_id", [isLoggedIn], (req, res) => {
+    try {
+        connection.query("SELECT id, title, price, productpicture FROM products WHERE category_fk = ? AND NOT seller_fk = ?", [req.params.category_id, req.session.userID], async (error, results) => {
+            if(error) res.send({ productsData: "error" });
+            if(results) res.send({ productsData: results });
+        }) 
+    } catch (error) {
+        res.send({ productsData: "error" });
+    }
+});
 
-// Myproducts
-router.get("/products/users/:userID", [isLoggedIn] ,(req, res) => {
+
+// GET
+// Shows the products of a specific user
+router.get("/products/users/:user_id", [isLoggedIn] ,(req, res) => {
     try {
         connection.query("SELECT id, title, price, productpicture FROM products WHERE seller_fk = ?", [req.session.userID], async (error, results) => {
             if(error) res.send({ myProductsData: "error" });
@@ -115,10 +141,11 @@ router.get("/products/users/:userID", [isLoggedIn] ,(req, res) => {
     }
 });
 
-// Buy product / receipt
-router.post("/products/:productID/receipts", [isLoggedIn] ,(req, res) => {
+//Post
+//Buy product / receipt
+router.post("/products/:product_id/receipts", [isLoggedIn] ,(req, res) => {
     try {
-        connection.query("INSERT INTO productreceipts (product_fk, seller_fk, buyer_fk) VALUES(?,?,?)", [req.params.productID, req.session.userID, req.body.buyer_fk], async (error, results) => {
+        connection.query("INSERT INTO productreceipts (product_fk, seller_fk, buyer_fk) VALUES(?,?,?)", [req.params.product_id, req.session.userID, req.body.buyer_fk], async (error, results) => {
             if(error) res.send({ buyProductData: "error" });
             if(results) {
                 connection.query("UPDATE products SET active = false WHERE id = ?", [req.params.productID], async (error, results) => {
@@ -132,6 +159,17 @@ router.post("/products/:productID/receipts", [isLoggedIn] ,(req, res) => {
     }
 });
 
-
+//GET
+// product categories
+router.get("/productCategories", [isLoggedIn], (req, res) => {
+    try {
+        connection.query("SELECT * FROM productcategories", [], async (error, results) => {
+            if(error) res.send({ categoriesData: "error" });
+            if(results) res.send({ categoriesData: results });
+        }) 
+    } catch (error) {
+        res.send({ categoriesData: "error" });
+    }
+});
 
 export default router;

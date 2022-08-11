@@ -19,7 +19,7 @@
 
     let categories = [];
     onMount(async () => {
-		const categoriesResponse = await fetch(`/products/categories`);
+		const categoriesResponse = await fetch(`/productCategories`);
 		const { categoriesData } = await categoriesResponse.json();
         console.log(categoriesData);
         categories = categoriesData;

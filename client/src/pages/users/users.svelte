@@ -3,16 +3,34 @@
     import User from "../../component/user/user.svelte"
     let users = [];
 
+    let search;
+
     onMount(async () => {
         const usersresponse = await fetch("/users");
         const { usersData } = await usersresponse.json();
         users = usersData;
     });   
 
+    async function handleSearchAfterUser(e) {
+        e.preventDefault();
+        const usersresponse = await fetch("/users?name="+search);
+        const { usersData } = await usersresponse.json();
+        users = usersData;
+    }
+
 </script>
 
 <div class="container mt-5">
     <h1>Users</h1>
+    <form on:submit={handleSearchAfterUser} id="searchbar">
+        <input
+			bind:value={search}
+			type="text"
+			name="name"
+			placeholder="Search for users like"
+		/>
+        <input class="btn btn-primary" type="submit" value="Search">
+    </form>
     <div class="usersWrapper mt-4">
         {#each users as user}
             <User profilepicture={user.profilepicture} name={user.name} userID={user.id} />

@@ -46,7 +46,7 @@
         }
         
         //user posts
-        const userPostsResponse = await fetch(`/users/${id}/posts`);
+        const userPostsResponse = await fetch(`/posts/users/${id}`);
         const { userPostsData } = await userPostsResponse.json();
         userPosts = userPostsData;
 	});
@@ -74,9 +74,9 @@
 
 
     let userPostText;
-    async function handleSubmitUserPost(e) {
+    async function handleCreateUserPost(e) {
         e.preventDefault();
-        const userPostResponse = await fetch(`/users/${id}/posts/`, {
+        const userPostResponse = await fetch(`/posts/users/${id}`, {
             method: "post",
             headers: {
                 'content-type': 'application/json'
@@ -151,7 +151,7 @@
         <div class="right">
             {#if Number(id) === $user.id} 
                 <div class="createUserPostWrapper pb-4">
-                    <form on:submit={handleSubmitUserPost}>
+                    <form on:submit={handleCreateUserPost}>
                         <h2>Create Post</h2>
                         <textarea
                             bind:value={userPostText}

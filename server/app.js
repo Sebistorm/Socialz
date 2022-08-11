@@ -8,7 +8,7 @@ app.use('/', helmet());
 
 import path from "path";
 app.use("/uploads", express.static("uploads")); 
-app.use(express.static(path.resolve("../client/public")));
+
 
 import session from "express-session"
 app.use(session({
@@ -60,7 +60,10 @@ app.use(eventRouter);
 import productRouter from "./routers/productRouter.js";
 app.use(productRouter); 
 
+import postRouter from "./routers/postRouter.js";
+app.use(postRouter); 
 
+app.use(express.static(path.resolve("../client/public")));
 
 const PORT = process.env.PORT || 3000;
 server.listen(PORT, () => {

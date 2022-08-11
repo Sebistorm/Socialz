@@ -27,7 +27,7 @@
         product.price = Number(ProductData[0].price);
         product.category_fk = ProductData[0].category_fk;
         product.seller_fk = ProductData[0].seller_fk;
-        const categoriesResponse = await fetch(`/products/categories`);
+        const categoriesResponse = await fetch(`/productCategories`);
 		const { categoriesData } = await categoriesResponse.json();
         categories = categoriesData;
 	});

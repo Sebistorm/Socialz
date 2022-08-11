@@ -7,7 +7,7 @@
 
     let usersPosts = [];
     onMount(async () => {
-		const usersPostsResponse = await fetch(`/users/posts`);
+		const usersPostsResponse = await fetch("/posts/users");
 		const { usersPostsData } = await usersPostsResponse.json();
         console.log(usersPostsData);
         usersPosts = usersPostsData;
@@ -24,6 +24,7 @@
 
     <p><Link to="marketplace/create">Create Product</Link></p>
     <p><Link to="marketplace/users/4/myproducts">See my Products</Link></p>
+    <p><Link to="marketplace/products">See all Products</Link></p>
 
     <p><Link to="marketplace/editproduct/2">Anden kundens product</Link></p>
 

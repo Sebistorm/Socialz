@@ -21,7 +21,7 @@
 		e.preventDefault();
 		user.email = email;
 		user.name = name
-		const updateUserResponse = await fetch(`/users`, {
+		const updateUserResponse = await fetch(`/users/${$user.id}`, {
             method: "put",
             headers: {
                 'content-type': 'application/json'
@@ -42,8 +42,8 @@
         const formData = new FormData();
 		formData.append("profilepicture", profilepicture[0]);
         
-        const updateUserImageResponse = await fetch(`/users`, {
-            method: "PATCH",
+        const updateUserImageResponse = await fetch(`/users/${$user.id}/profilepicture`, {
+            method: "put",
             body: formData
         })
         const {updateUserImageData} = await updateUserImageResponse.json();

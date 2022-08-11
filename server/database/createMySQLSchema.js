@@ -1,5 +1,6 @@
 import db from "./createMySQLConnection.js";
 
+
 const deleteMode = false;
 
 // Seed for users

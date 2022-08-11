@@ -31,45 +31,17 @@ import connection from "../database/createMySQLConnection.js"
 
 import { authLimiter, isLoggedIn } from "../authorization/authorization.js"
 
-// user post
 
-router.get("/users/posts", [isLoggedIn], (req, res) => {
-    try {
-        connection.query("SELECT posts.*, users.name, users.profilePicture FROM users_posts AS posts INNER JOIN users AS users ON posts.user_fk = users.id WHERE posts.user_fk = ? OR posts.user_fk IN (select following_fk from follows where user_fk = ?) ORDER BY posts.date desc", [req.session.userID, req.session.userID], (error, results) => {
-            if(error) res.send({usersPostsData: "error"});
-            if(results) res.send({usersPostsData: results});
-        })
-    } catch (error) {
-        res.send({usersPostsData: "error"});
-    }   
-}); 
-
-router.post("/users/:userID/posts", [isLoggedIn], (req, res) => {
-    try {
-        connection.query("INSERT INTO users_posts (user_fk, text) VALUES(?,?)", [req.params.userID, req.body.userPostText], (error, results) => {
-            if(error) res.send({userPostData: "error"});
-            if(results) res.send({userPostData: "success"});
-        })
-    } catch (error) {
-        res.send({userPostData: "error"});
+//GET
+// Gets all users except yourself
+// And search for name
+router.get("/users", [isLoggedIn], (req, res) => {
+    //if req.query.name is undefined
+    if(!req.query.name) {
+        req.query.name = "";
     }
-});
-
-router.get("/users/:userID/posts", [isLoggedIn], (req, res) => {
     try {
-        connection.query("SELECT * FROM users_posts WHERE user_fk = ? order by date desc", [req.params.userID], (error, results) => {
-            if(error) res.send({userPostsData: "error"});
-            if(results) res.send({userPostsData: results});
-        })
-    } catch (error) {
-        res.send({userPostsData: "error"});
-    }
-});
-
-
-router.get("/users/", [isLoggedIn], (req, res) => {
-    try {
-        connection.query("SELECT id, name, profilepicture FROM users WHERE NOT id = ?", [req.session.userID] ,(error, results) => {
+        connection.query("SELECT id, name, profilepicture FROM users WHERE name LIKE ? AND NOT id = ?", [req.query.name+"%", req.session.userID] ,(error, results) => {
             if(error) res.send({ usersData: "error" });
             if(results) res.send({ usersData: results });
         })
@@ -78,9 +50,11 @@ router.get("/users/", [isLoggedIn], (req, res) => {
     }    
 });
 
-router.get("/users/:userID", [isLoggedIn], (req, res) => {
+//GET
+//Gets one user by userID
+router.get("/users/:id", [isLoggedIn], (req, res) => {
     try {
-        connection.query("SELECT email, name, profilepicture FROM users WHERE id = ?", [req.params.userID], (error, results) => {
+        connection.query("SELECT email, name, profilepicture FROM users WHERE id = ?", [req.params.id], (error, results) => {
             if(error) res.send({ userData: "error" });
             if(results) res.send({ userData: results });
         })
@@ -89,8 +63,9 @@ router.get("/users/:userID", [isLoggedIn], (req, res) => {
     }    
 });
 
-
-router.put("/users", [isLoggedIn], (req, res) => {
+//PUT
+//Updates an user by userID
+router.put("/users/:id", [isLoggedIn], (req, res) => {
     try {
         connection.query("UPDATE users SET email = ?, name = ? WHERE id = ?", [req.body.email, req.body.name, req.session.userID], async (error, results) => {
             if(error) res.send({ updateUserData: "error" });
@@ -101,8 +76,9 @@ router.put("/users", [isLoggedIn], (req, res) => {
     }
 });
 
-// for profilepicture
-router.patch("/users", [upload.single("profilepicture"), isLoggedIn] ,(req, res) => {
+// PUT
+// Updates the profilepicture of a user (by userID)
+router.put("/users/:id/profilepicture", [upload.single("profilepicture"), isLoggedIn] ,(req, res) => {
     try {
         connection.query("UPDATE users SET profilepicture = ? WHERE id = ?", [req.file.path, req.session.userID], async (error, results) => {
             if(error) res.send({ updateUserImageData: "error" });
@@ -112,8 +88,9 @@ router.patch("/users", [upload.single("profilepicture"), isLoggedIn] ,(req, res)
         res.send({ updateUserImageData: "error" });
     }     
 });
-
-router.delete("/users", [isLoggedIn, authLimiter], (req, res) => {
+// DELETE
+// Deletes a user by userID
+router.delete("/users/:id", [isLoggedIn, authLimiter], (req, res) => {
     try {
         connection.query("DELETE FROM users WHERE id = ?", [req.session.userID], (error, results) => {
             if(error) res.send({ deleteUserData: "error" });
@@ -124,13 +101,25 @@ router.delete("/users", [isLoggedIn, authLimiter], (req, res) => {
     }    
 });
 
-
-
-
-// following showcase
-router.get("/users/:userID/following/showcase", [isLoggedIn], (req, res) => {
+//GET
+// Gets all users except yourself
+router.get("/users/:search", [isLoggedIn], (req, res) => {
+    console.log("hej")
     try {
-        connection.query("SELECT users.name, users.profilepicture, x.count FROM follows JOIN users ON follows.following_fk = users.id, (select count(*) as count FROM follows WHERE user_fk = ?) as x WHERE follows.user_fk = ? limit 9", [req.params.userID, req.params.userID], (error, results) => {
+        connection.query("SELECT id, name, profilepicture FROM users WHERE NOT id = ?", [req.session.userID] ,(error, results) => {
+            if(error) res.send({ usersData: "error" });
+            if(results) res.send({ usersData: results });
+        })
+    } catch (error) {
+        res.send({ usersData: "error" });
+    }    
+});
+
+// GET
+// Showcase of which users the user is following
+router.get("/users/:id/following/showcase", [isLoggedIn], (req, res) => {
+    try {
+        connection.query("SELECT users.name, users.profilepicture, x.count FROM follows JOIN users ON follows.following_fk = users.id, (select count(*) as count FROM follows WHERE user_fk = ?) as x WHERE follows.user_fk = ? limit 9", [req.params.id, req.params.id], (error, results) => {
             if(error) res.send({followingData: "error"});
             if(results) res.send({followingData: results});
         })
@@ -139,10 +128,11 @@ router.get("/users/:userID/following/showcase", [isLoggedIn], (req, res) => {
     }
 });
 
-// followers showcase
-router.get("/users/:userID/followers/showcase", [isLoggedIn], (req, res) => {
+// GET
+// Showcase of who is following the user
+router.get("/users/:id/followers/showcase", [isLoggedIn], (req, res) => {
     try {
-        connection.query("select users.name, users.profilepicture, x.count FROM users JOIN follows ON users.id = follows.user_fk, (select count(*) as count FROM follows WHERE following_fk = ?) as x WHERE follows.following_fk = ? limit 9", [req.params.userID, req.params.userID], (error, results) => {
+        connection.query("select users.name, users.profilepicture, x.count FROM users JOIN follows ON users.id = follows.user_fk, (select count(*) as count FROM follows WHERE following_fk = ?) as x WHERE follows.following_fk = ? limit 9", [req.params.id, req.params.id], (error, results) => {
             if(error) res.send({followersData: "error"});
             if(results) res.send({followersData: results});
         })
@@ -152,35 +142,11 @@ router.get("/users/:userID/followers/showcase", [isLoggedIn], (req, res) => {
     
 });
 
-
-
-
-// following
-router.post("/users/:userID/following/:followingID", [isLoggedIn], (req, res) => {
+//GET
+// Check if the user is following a specific user
+router.get("/users/:id/following/:following_id", [isLoggedIn], (req, res) => {
     try {
-        connection.query("INSERT INTO follows (user_fk, following_fk) VALUES(?,?)", [req.session.userID, req.params.followingID], (error, results) => {
-            if(error) res.send({createFollowData: "error"});
-            if(results) res.send({createFollowData: "success"});
-        })
-    } catch (error) {
-        res.send({createFollowData: "error"});
-    }
-});
-
-router.delete("/users/:userID/following/:followingID", [isLoggedIn, authLimiter], (req, res) => {
-    try {
-        connection.query("DELETE FROM follows WHERE user_fk = ? AND following_fk = ?", [req.session.userID, req.params.followingID], (error, results) => {
-            if(error) res.send({createUnFollowData: "error"});
-            if(results) res.send({createUnFollowData: "success"});
-        })
-    } catch (error) {
-        res.send({createUnFollowData: "error"});
-    }
-});
-
-router.get("/users/:userID/following/:followingID", [isLoggedIn], (req, res) => {
-    try {
-        connection.query("SELECT * FROM follows WHERE user_fk = ? AND following_fk = ?", [req.params.userID, req.params.followingID], (error, results) => {
+        connection.query("SELECT * FROM follows WHERE user_fk = ? AND following_fk = ?", [req.params.id, req.params.following_id], (error, results) => {
             if(error) res.send({followingStatus: "error"});
             if(results) {
                 if(results.length === 0) {
@@ -196,14 +162,50 @@ router.get("/users/:userID/following/:followingID", [isLoggedIn], (req, res) => 
     
 });
 
-
-
-
-
-// chat messages
-router.post("/users/:userID/person/:personID", [isLoggedIn], (req, res) => {
+//POST
+// Adds who the user is following
+router.post("/users/:id/following/:following_id", [isLoggedIn], (req, res) => {
     try {
-        connection.query("INSERT INTO chatmessages (user_fk, person_fk, chatmessage) VALUES(?,?,?)", [req.params.userID, req.params.personID, req.body.chatMessage], (error, results) => {
+        connection.query("INSERT INTO follows (user_fk, following_fk) VALUES(?,?)", [req.session.userID, req.params.following_id], (error, results) => {
+            if(error) res.send({createFollowData: "error"});
+            if(results) res.send({createFollowData: "success"});
+        })
+    } catch (error) {
+        res.send({createFollowData: "error"});
+    }
+});
+
+// DELETE
+// Deletes the following on a specific user
+router.delete("/users/:id/following/:following_id", [isLoggedIn, authLimiter], (req, res) => {
+    try {
+        connection.query("DELETE FROM follows WHERE user_fk = ? AND following_fk = ?", [req.session.userID, req.params.following_id], (error, results) => {
+            if(error) res.send({createUnFollowData: "error"});
+            if(results) res.send({createUnFollowData: "success"});
+        })
+    } catch (error) {
+        res.send({createUnFollowData: "error"});
+    }
+});
+
+// GET
+// Selects the messages between 2 users
+router.get("/users/:id/person/:person_id", [isLoggedIn], (req, res) => {
+    try {
+        connection.query("SELECT chatmessages.id, chatmessages.chatmessage, chatmessages.user_fk , users.name as personname from chatmessages JOIN users ON chatmessages.user_fk = users.id WHERE user_fk = ? AND person_fk = ? OR user_fk = ? AND person_fk = ?", [req.params.id, req.params.person_id, req.params.person_id, req.params.id], (error, results) => {
+            if(error) res.send({ chatData: "error" });
+            if(results) res.send({ chatData: results });
+        })
+    } catch (error) {
+        res.send({ chatData: "error" });
+    }
+});
+
+//POST
+// Post the message between 2 users
+router.post("/users/:id/person/:person_id", [isLoggedIn], (req, res) => {
+    try {
+        connection.query("INSERT INTO chatmessages (user_fk, person_fk, chatmessage) VALUES(?,?,?)", [req.params.id, req.params.person_id, req.body.chatMessage], (error, results) => {
             console.log(req.body);
             if(error) res.send({ userMesssageData: "error" });
             if(results) res.send({ userMesssageData: "success" });
@@ -213,20 +215,10 @@ router.post("/users/:userID/person/:personID", [isLoggedIn], (req, res) => {
     }
 });
 
-router.get("/users/:userID/person/:personID", [isLoggedIn], (req, res) => {
-    try {
-        connection.query("SELECT chatmessages.id, chatmessages.chatmessage, chatmessages.user_fk , users.name as personname from chatmessages JOIN users ON chatmessages.user_fk = users.id WHERE user_fk = ? AND person_fk = ? OR user_fk = ? AND person_fk = ?", [req.params.userID, req.params.personID, req.params.personID, req.params.userID], (error, results) => {
-            if(error) res.send({ chatData: "error" });
-            if(results) res.send({ chatData: results });
-        })
-    } catch (error) {
-        res.send({ chatData: "error" });
-    }
-});
 
-
-// events
-router.get("/users/:userID/events", [isLoggedIn], (req, res) => {
+// GET
+// SELECTS all the events the user has created or been invited to
+router.get("/users/:id/events", [isLoggedIn], (req, res) => {
     try {
         connection.query("SELECT * from events WHERE id IN (select event_fk from events_invites where user_fk = ? ) OR createdby_fk = ?", [req.session.userID, req.session.userID], (error, results) => {
             console.log(results)
@@ -238,6 +230,11 @@ router.get("/users/:userID/events", [isLoggedIn], (req, res) => {
     }    
 });
 
+
+
+
+// GET 
+//logout
 router.get("/logout", (req, res) => {
     try {
         req.session.destroy((err) => {
@@ -256,7 +253,7 @@ router.get("/logout", (req, res) => {
 
 
 
-
+//POST
 // signup
 router.post("/users", authLimiter , async (req,res) => {
     try {
@@ -271,6 +268,7 @@ router.post("/users", authLimiter , async (req,res) => {
     }     
 });
 
+//POST
 //login
 router.post("/users/login", authLimiter ,  (req, res) => {
     try {

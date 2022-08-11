@@ -3,7 +3,7 @@
 
     async function handleDeleteUser(e) {
         e.preventDefault();
-        const deleteUserResponse = await fetch(`/users`, {
+        const deleteUserResponse = await fetch(`/users/${$user.id}`, {
             method: "delete"
         })
         const {deleteUserData} = await deleteUserResponse.json();
