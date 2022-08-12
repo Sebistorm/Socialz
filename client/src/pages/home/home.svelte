@@ -27,6 +27,7 @@
     <p><Link to="marketplace/products">See all Products</Link></p>
 
     <p><Link to="marketplace/editproduct/2">Anden kundens product</Link></p>
+    <p><Link to="marketplace/productreceipt/1">Kvittering</Link></p>
 
 </div>
 

@@ -141,6 +141,20 @@ router.get("/products/users/:user_id", [isLoggedIn] ,(req, res) => {
     }
 });
 
+
+//GET
+// Shows a receipt for a specific product
+router.get("/products/:product_id/receipt", [isLoggedIn] ,(req, res) => {
+    try {
+        connection.query("SELECT seller.email as sellerEmail, seller.name as sellerName, seller.id as sellerID, buyer.email as buyerEmail, buyer.name as buyerName, buyer.id as buyerID, products.id as productID, products.title as productTitle, products.description as productDescription, products.price as productPrice, products.productpicture as productImg, productcategories.categoryname as productCategory FROM productreceipts JOIN users as seller ON productreceipts.seller_fk = seller.id JOIN users as buyer ON productreceipts.buyer_fk = buyer.id JOIN products ON productreceipts.product_fk = products.id JOIN productcategories ON products.category_fk = productcategories.id WHERE products.id = ?", [req.params.product_id], async (error, results) => {
+            if(error) res.send({ productReceiptData: "error" });
+            if(results) res.send({ productReceiptData: results });
+        }) 
+    } catch (error) {
+        res.send({ productReceiptData: "error" });
+    }
+});
+
 //Post
 //Buy product / receipt
 router.post("/products/:product_id/receipts", [isLoggedIn] ,(req, res) => {

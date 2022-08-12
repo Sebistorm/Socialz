@@ -30,7 +30,7 @@
 	import Products from "./pages/products/products/products.svelte";
 	import ProductDelete from "./pages/products/product/confirmdeleteproduct.svelte";
 
-
+	import ProductReceipt from "./pages/productsreceipt/productsReceipt.svelte"
 	import MyProducts from "./pages/products/products/myProducts.svelte";
 
 
@@ -172,6 +172,10 @@
 
 			<PrivateRoute path="marketplace/confirmdeleteproduct/:id" let:params>
 				<ProductDelete productID={params.id}></ProductDelete>
+			</PrivateRoute>
+
+			<PrivateRoute path="marketplace/productreceipt/:id" let:params>
+				<ProductReceipt productID={params.id}></ProductReceipt>
 			</PrivateRoute>
 
 		</div>
