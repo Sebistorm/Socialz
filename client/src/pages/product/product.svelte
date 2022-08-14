@@ -2,7 +2,11 @@
     
     import { onMount } from "svelte";
     import { Link } from "svelte-navigator";
-    import {user} from "../../../store/userStore";
+    import {user} from "../../store/userStore";
+    import { useNavigate, useLocation } from "svelte-navigator";
+
+    const navigate = useNavigate();
+	const location = useLocation();
 
     export let productID;
     let title; 
@@ -49,10 +53,15 @@
             body: JSON.stringify(buyer)
         })
         const {buyProductData} = await buyProductResponse.json();
-        if(buyProductData === "success") {
-            buymsg = "congratz! You have bought this product"
-        }
         console.log(buyProductData);
+        if(buyProductData === "success") { 
+            buymsg = "congratz! You have bought this product. You will be redirected in 3 sec"
+            setTimeout(()=> {
+                const from = ($location.state && $location.state.from) || `/marketplace/productreceipt/${productID}`;
+		        navigate(from, { replace: true });
+            }, 3000)
+        }
+        
     }
 </script>
 
@@ -81,22 +90,22 @@
                 </div> 
             {/if}
 
-            {#if productactive === 1}
+            {#if productactive === 1 && seller_fk !== $user.id}
                 <h2 class="mt-3">Buy</h2>
                 <p>{buymsg}</p>
                 <form on:submit={handleBuyProduct}>
                     <label for="fullname">Fullname</label>
-                    <input class="w-75" type="text">
+                    <input required minlength="8" class="w-75" type="text">
                     <label for="cardnumber">Cardnumber</label>
-                    <input class="w-75" type="number">
+                    <input required minlength="12" maxlength="12" class="w-75" type="text">
                     <div class="d-flex">
                         <div class="d-flex flex-column">
                             <label for="expiringdate">Expiring date</label>
-                            <input class="w-50" type="number">
+                            <input required minlength="5" maxlength="5" class="w-50" type="text">
                         </div>
                         <div class="d-flex flex-column">
                             <label for="CVC">CVC</label>
-                            <input class="w-50" type="number">
+                            <input required minlength="3" maxlength="3" class="w-50" type="text">
                         </div>
                     </div>
                     <button class="btn btn-primary w-75 mt-3" type="submit">Buy</button>

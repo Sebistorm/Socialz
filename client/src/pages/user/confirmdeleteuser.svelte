@@ -15,6 +15,7 @@
 
 </script>
 
+
 <div class="container mt-5">
     <h1>Are you sure you want to delete user?</h1>
     <button on:click={handleDeleteUser} class="btn btn-danger">Delete User</button>

@@ -23,7 +23,7 @@
 		const {createEventData} = await createEventResponse.json();
 		console.log(createEventData);
 		if(createEventData === "success") {
-			const from = ($location.state && $location.state.from) || `/users/${$user.id}/events`;
+			const from = ($location.state && $location.state.from) || `/community/users/${$user.id}/events`;
 			navigate(from, { replace: true });
 		}
 	}

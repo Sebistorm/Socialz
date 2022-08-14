@@ -119,8 +119,8 @@
         <div class="right d-flex align-items-end">
             {#if $user.id === Number(id)}
                 <div class="right d-flex align-items-end">
-                    <p class="btn btn-primary me-2"><Link to="/editUser">Edit Profile</Link></p>
-                    <p class="btn btn-danger"><Link to="/confirmDeleteUser">Delete User</Link></p>
+                    <p class="btn btn-primary me-2"><Link to="/community/editUser">Edit Profile</Link></p>
+                    <p class="btn btn-danger"><Link to="/community/confirmDeleteUser">Delete User</Link></p>
                 </div>
             {/if}
 

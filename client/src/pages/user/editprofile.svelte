@@ -2,7 +2,6 @@
     import { onMount } from "svelte/internal";
     import {user} from "../../store/userStore";
 
-    import { useNavigate, useLocation } from "svelte-navigator";
 
     let name;
     let email;
@@ -50,7 +49,9 @@
         console.log(updateUserImageData);
         if(updateUserImageData === "success") {
             resmsg = "The picture was updated"
-        }
+        } else {
+			resmsg = "Something went wrong"
+		}
 	}
 
 	let imagepreviewsrc;

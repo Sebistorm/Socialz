@@ -40,6 +40,7 @@
 </script>
 {#if sellerID === $user.id || buyerID === $user.id}
     <div class="container">
+        <h1>Product receipt</h1>
         <div id="productWrapper">
             <div class="imgWrapper">
                 <img class="w-100" src="/{productImg}" alt="{title}">

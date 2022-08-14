@@ -1,6 +1,6 @@
 <script>
     import { onMount } from "svelte/internal";
-    import { user } from "../../../store/userStore";
+    import { user } from "../../store/userStore";
 	
 
     export let productID;

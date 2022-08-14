@@ -6,7 +6,7 @@
 
 </script>
 
-<Link to="/users/{userID}">
+<Link to="/community/users/{userID}">
     <div class="user">
         <img src="/{profilepicture}" alt="{name}">
         <h4>{name}</h4>

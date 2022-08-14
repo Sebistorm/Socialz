@@ -29,7 +29,8 @@
 		if(userLoginData.status === "success") {
 			user.set({ 
 				id: userLoginData.results.id,
-				name: userLoginData.results.name
+				name: userLoginData.results.name,
+				profilepicture: userLoginData.results.profilepicture
 			});
 			socket.emit("userLoggedIn", userLoginData.results.id);
 			const from = ($location.state && $location.state.from) || "/";

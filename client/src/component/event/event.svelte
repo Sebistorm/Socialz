@@ -7,7 +7,7 @@
 
 </script>
 
-<Link to="/events/{eventID}">
+<Link to="/community/events/{eventID}">
     <div class="event">
         <img src="/{eventpicture}" alt="{title}">
         <h4>{title}</h4>

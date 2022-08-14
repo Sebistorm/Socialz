@@ -283,7 +283,8 @@ router.post("/users/login", authLimiter ,  (req, res) => {
                         res.send({ userLoginData: {
                             results: {
                                 id: results[0].id,
-                                name: results[0].name
+                                name: results[0].name,
+                                profilepicture: results[0].profilepicture
                             }, 
                             status: "success" 
                         }});

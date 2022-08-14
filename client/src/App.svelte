@@ -7,8 +7,8 @@
 	import UserSignup from "./pages/usersignup/signup.svelte";
 	import UserLogin from "./pages/userlogin/login.svelte";
 	import UserProfile from "./pages/myprofile/profile.svelte";
-	import UserEditProfile from "./pages/myprofile/editprofile.svelte";
-	import UserConfirmDelete from "./pages/myprofile/confirmdeleteuser.svelte";
+	import UserEditProfile from "./pages/user/editprofile.svelte";
+	import UserConfirmDelete from "./pages/user/confirmdeleteuser.svelte";
 	import Users from "./pages/users/users.svelte";
 	import User from "./pages/user/user.svelte"
 
@@ -24,14 +24,14 @@
 	import EventInvitePeople from "./pages/event/invitepeopletoevent.svelte";
 	import EventGuestList from "./pages/event/guestlist.svelte";
 
-	import ProductCreate from "./pages/products/product/createproduct.svelte";
-	import ProductEdit from "./pages/products/product/editproduct.svelte";
-	import Product from "./pages/products/product/product.svelte";
-	import Products from "./pages/products/products/products.svelte";
-	import ProductDelete from "./pages/products/product/confirmdeleteproduct.svelte";
+	import ProductCreate from "./pages/product/createproduct.svelte";
+	import ProductEdit from "./pages/product/editproduct.svelte";
+	import Product from "./pages/product/product.svelte";
+	import Products from "./pages/products/products.svelte";
+	import ProductDelete from "./pages/product/confirmdeleteproduct.svelte";
 
 	import ProductReceipt from "./pages/productsreceipt/productsReceipt.svelte"
-	import MyProducts from "./pages/products/products/myProducts.svelte";
+	import MyProducts from "./pages/products/myProducts.svelte";
 
 
 
@@ -64,14 +64,20 @@
 					{/if}
 				
 					{#if $user}
-						<Link to="profile/">profile1</Link>
+						<Link to="community/users/{$user.id}">profile</Link>
 					{/if}
 					{#if $user}
-						<Link to="users/{$user.id}">profile2</Link>
+						<Link to="community/users">Users</Link>
 					{/if}
+
 					{#if $user}
-						<Link to="users">Users</Link>
+						<Link to="community/users/{$user.id}/events">Se My Events</Link>
 					{/if}
+
+					{#if $user}
+						<Link to="marketplace/products">See all Products</Link>
+					{/if}
+
 
 					{#if $user}
 						<span id="onlineUsers">{userOnlineCount} users online</span>
@@ -99,54 +105,51 @@
 			<Route path="signup" component={UserSignup} />
 			<Route path="login" component={UserLogin} />
 
-			<PrivateRoute path="profile">
-				<UserProfile></UserProfile>
-			</PrivateRoute>
 
-			<PrivateRoute path="editUser">
+			<PrivateRoute path="community/editUser">
 				<UserEditProfile></UserEditProfile>
 			</PrivateRoute>
 
-			<PrivateRoute path="confirmDeleteUser">
+			<PrivateRoute path="community/confirmDeleteUser">
 				<UserConfirmDelete></UserConfirmDelete>
 			</PrivateRoute>
 
-			<PrivateRoute path="users">
+			<PrivateRoute path="community/users">
 				<Users></Users>
 			</PrivateRoute>
 
-			<PrivateRoute path="users/:id" let:params>
+			<PrivateRoute path="community/users/:id" let:params>
 				<User id={params.id}></User>
 			</PrivateRoute>
 
 			<PrivateRoute path="messages/t/:id" let:params>
 				<Chat id={params.id}></Chat>
 			</PrivateRoute>
-			<PrivateRoute path="users/:id/events">
+			<PrivateRoute path="community/users/:id/events">
 				<MyEvents></MyEvents>
 			</PrivateRoute>
 
-			<PrivateRoute path="createevent">
+			<PrivateRoute path="community/createevent">
 				<EventCreate></EventCreate>
 			</PrivateRoute>
 
-			<PrivateRoute path="events/:id" let:params>
+			<PrivateRoute path="community/events/:id" let:params>
 				<Event eventID={params.id}></Event>
 			</PrivateRoute>
 
-			<PrivateRoute path="editEvent/:id" let:params>
+			<PrivateRoute path="community/editEvent/:id" let:params>
 				<EventEdit eventID={params.id}></EventEdit>
 			</PrivateRoute>
 
-			<PrivateRoute path="confirmDeleteEvent/:id" let:params>
+			<PrivateRoute path="community/confirmDeleteEvent/:id" let:params>
 				<EventDelete eventID={params.id}></EventDelete>
 			</PrivateRoute>
 
-			<PrivateRoute path="events/:id/invite" let:params>
+			<PrivateRoute path="community/events/:id/invite" let:params>
 				<EventInvitePeople eventID={params.id}></EventInvitePeople>
 			</PrivateRoute>
 
-			<PrivateRoute path="events/:id/users" let:params>
+			<PrivateRoute path="community/events/:id/users" let:params>
 				<EventGuestList eventID={params.id}></EventGuestList>
 			</PrivateRoute>
 

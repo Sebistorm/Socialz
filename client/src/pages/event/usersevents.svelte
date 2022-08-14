@@ -1,6 +1,7 @@
 <script>
     import { onMount } from "svelte/internal";
     import {user} from "../../store/userStore";
+    import { Link } from "svelte-navigator";
     import Event from "../../component/event/event.svelte";
     let upcomingEvents = [];
     let pastEvents = [];
@@ -26,14 +27,18 @@
 </script>
 
 <div class="container mt-5">
-    <h1>My upcoming events</h1>
+    <div class="d-flex align-items-center justify-content-between">
+        <h1>My upcoming events</h1>
+        <span><Link class="text-blue" to="/community/createevent">Create Event</Link></span>
+    </div>
+    
     <div class="eventsWrapper mt-4">
         {#each upcomingEvents as event}
             <Event eventpicture={event.eventpicture} title={event.title} eventID={event.id} date={event.date} />
 	    {/each}
     </div>
 
-    <h2>Past Events</h2>
+    <h2 class="mt-3">Past Events</h2>
     <div class="eventsWrapper mt-4">
         {#each pastEvents as event}
             <Event eventpicture={event.eventpicture} title={event.title} eventID={event.id} date={event.date} />

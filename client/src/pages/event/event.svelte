@@ -107,9 +107,9 @@
         </div>
         {#if createdby_fk === $user.id}
             <div class="right d-flex align-items-end">
-                <p class="btn btn-primary me-2"><Link to="/editEvent/{eventID}">Edit Event</Link></p>
-                <p class="btn btn-danger me-2"><Link to="/confirmDeleteEvent/{eventID}">Delete Event</Link></p>
-                <p class="btn btn-secondary"><Link to="/events/{eventID}/invite">Invite People</Link></p>
+                <p class="btn btn-primary me-2"><Link to="/community/editEvent/{eventID}">Edit Event</Link></p>
+                <p class="btn btn-danger me-2"><Link to="/community/confirmDeleteEvent/{eventID}">Delete Event</Link></p>
+                <p class="btn btn-secondary"><Link to="/community/events/{eventID}/invite">Invite People</Link></p>
             </div> 
         {/if}
     </div>

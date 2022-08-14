@@ -38,7 +38,7 @@ router.get("/products", [isLoggedIn], (req, res) => {
         req.query.title = "";
     }
     try {
-        connection.query("SELECT id, title, price, productpicture FROM products WHERE title LIKE ? AND NOT seller_fk = ?", [req.query.title+"%", req.session.userID], async (error, results) => {
+        connection.query("SELECT id, title, price, productpicture FROM products WHERE title LIKE ? AND NOT seller_fk = ? AND NOT active = 0", [req.query.title+"%", req.session.userID], async (error, results) => {
             if(error) res.send({ productsData: "error" });
             if(results) res.send({ productsData: results });
         }) 
@@ -118,7 +118,7 @@ router.put("/products/:product_id/productpicture", [upload.single("productpictur
 // sort by category_id
 router.get("/products/sort/:category_id", [isLoggedIn], (req, res) => {
     try {
-        connection.query("SELECT id, title, price, productpicture FROM products WHERE category_fk = ? AND NOT seller_fk = ?", [req.params.category_id, req.session.userID], async (error, results) => {
+        connection.query("SELECT id, title, price, productpicture FROM products WHERE category_fk = ? AND NOT seller_fk = ? AND NOT active = 0", [req.params.category_id, req.session.userID], async (error, results) => {
             if(error) res.send({ productsData: "error" });
             if(results) res.send({ productsData: results });
         }) 
@@ -159,10 +159,11 @@ router.get("/products/:product_id/receipt", [isLoggedIn] ,(req, res) => {
 //Buy product / receipt
 router.post("/products/:product_id/receipts", [isLoggedIn] ,(req, res) => {
     try {
-        connection.query("INSERT INTO productreceipts (product_fk, seller_fk, buyer_fk) VALUES(?,?,?)", [req.params.product_id, req.session.userID, req.body.buyer_fk], async (error, results) => {
+        connection.query("INSERT INTO productreceipts (product_fk, seller_fk, buyer_fk) VALUES(?,?,?)", [req.params.product_id, req.body.seller_fk, req.session.userID], async (error, results) => {
             if(error) res.send({ buyProductData: "error" });
             if(results) {
-                connection.query("UPDATE products SET active = false WHERE id = ?", [req.params.productID], async (error, results) => {
+                
+                connection.query("UPDATE products SET active = false WHERE id = ?", [req.params.product_id], async (error, results) => {
                     if(error) res.send({ buyProductData: "error" });
                     if(results) res.send({ buyProductData: "success" });
                 })         

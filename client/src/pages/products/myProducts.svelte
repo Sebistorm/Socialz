@@ -1,8 +1,8 @@
 <script>
     import { onMount } from "svelte/internal";
-    import { user } from "../../../store/userStore";
-
-    import Product from "../../../component/product/product.svelte"
+    import { user } from "../../store/userStore";
+    import { Link } from "svelte-navigator";
+    import Product from "../../component/product/product.svelte"
 
     let myProducts = [];
     onMount(async () => {
@@ -15,7 +15,10 @@
 </script>
 
 <div class="container">
-    <h1>My Products</h1>
+    <div class="d-flex align-items-center justify-content-between">
+        <h1>My Products</h1>
+        <span><Link class="text-blue" to="/marketplace/create">Create Product</Link></span>
+    </div>
 
     <div id="productsWrapper" class="mt-4">
         {#each myProducts as myProduct}

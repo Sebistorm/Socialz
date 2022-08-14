@@ -1,8 +1,8 @@
 <script>
     import { onMount } from "svelte/internal";
     import { Link } from "svelte-navigator";
-    import {user} from "../../../store/userStore";
-    import Product from "../../../component/product/product.svelte"
+    import {user} from "../../store/userStore";
+    import Product from "../../component/product/product.svelte"
 
     let products = [];
     let categories = [];
