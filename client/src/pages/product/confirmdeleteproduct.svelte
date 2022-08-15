@@ -26,7 +26,7 @@
 
 </script>
 
-<div class="container mt-5">
+<div class="container mt-5" style="min-height: calc(100vh - 12rem);">
     <h1>Are you sure you want to delete the Product?</h1> 
     <button on:click={handleDeleteProduct} class="btn btn-danger">Delete Product</button>
 </div>

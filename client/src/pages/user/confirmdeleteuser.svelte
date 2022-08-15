@@ -20,7 +20,7 @@
 </script>
 
 
-<div class="container mt-5">
+<div class="container mt-5" style="min-height: calc(100vh - 12rem);"    >
     <h1>Are you sure you want to delete user?</h1>
     <button on:click={handleDeleteUser} class="btn btn-danger">Delete User</button>
 </div>

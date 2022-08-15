@@ -22,6 +22,7 @@
         background-color: #31394c;
         color: white;
         height: 100%;
+        padding-bottom: 1rem;
     }
 
     .event img {

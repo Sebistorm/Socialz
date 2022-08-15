@@ -73,11 +73,11 @@
 					{/if}
 
 					{#if $user}
-						<Link to="community/users/{$user.id}/events">Se My Events</Link>
+						<Link to="community/users/{$user.id}/events">My Events</Link>
 					{/if}
 
 					{#if $user}
-						<Link to="marketplace/products">See all Products</Link>
+						<Link to="marketplace/products">All Products</Link>
 					{/if}
 
 
@@ -187,6 +187,8 @@
 	</Router>
 	
 
+	<div id="footer"></div>
+
 </main>
 
 <style>
@@ -228,6 +230,13 @@
 nav {
 	background-color: #1B2A38;
 	padding: 20px 0px;
+}
+
+#footer {
+	height: 3rem;
+	background-color: #1B2A38;
+	width: 100%;
+	margin-top: 2rem;
 }
 
 

@@ -87,7 +87,7 @@
 </script>
 
 
-<div class="container">
+<div class="container" style="min-height: calc(100vh - 12rem);">
     <h1>Edit Profile</h1>
 	<p>{resmsg}</p>
 	<div class="editWrapper">
@@ -98,7 +98,8 @@
 				type="text"
 				name="email"
 				placeholder="email"
-				required
+				minlength="3"
+                required
 			/>
 			<label for="name">Name</label>
 			<input
@@ -106,7 +107,8 @@
 				type="text"
 				name="name"
 				placeholder="name"
-				required
+				minlength="3"
+                required
 			/>
 			<button type="submit">Save</button>
 		</form>

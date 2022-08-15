@@ -28,7 +28,7 @@
 
 </script>
 
-<div class="container mt-5">
+<div class="container mt-5" style="min-height: calc(100vh - 12rem);">
     <div class="d-flex align-items-center justify-content-between">
         <h1>My upcoming events</h1>
         <span><Link class="text-blue" to="/community/createevent">Create Event</Link></span>

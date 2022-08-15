@@ -81,6 +81,8 @@
                 type="text"
                 name="eventPostText"
                 placeholder="Something on your mind?"
+                minlength="1"
+                required
             />
             <button class="btn btn-primary" type="submit">Post It</button>
         </form>

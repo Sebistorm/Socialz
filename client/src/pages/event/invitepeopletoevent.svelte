@@ -17,7 +17,7 @@
 
 </script>
 
-<div class="container">
+<div class="container" style="min-height: calc(100vh - 12rem);">
     <h1>Invite people</h1>
     <div class="row usersWrapper">
         {#each peopleToInvite as people}

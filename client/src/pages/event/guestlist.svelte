@@ -25,7 +25,7 @@
 
 </script>
 
-<div class="container mt-5">
+<div class="container mt-5" style="min-height: calc(100vh - 12rem);">
     <h1>Guestlist</h1>
     
     <div class="row">

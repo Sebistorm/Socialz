@@ -206,7 +206,6 @@ router.get("/users/:id/person/:person_id", [isLoggedIn], (req, res) => {
 router.post("/users/:id/person/:person_id", [isLoggedIn], (req, res) => {
     try {
         connection.query("INSERT INTO chatmessages (user_fk, person_fk, chatmessage) VALUES(?,?,?)", [req.params.id, req.params.person_id, req.body.chatMessage], (error, results) => {
-            console.log(req.body);
             if(error) res.send({ userMesssageData: "error" });
             if(results) res.send({ userMesssageData: "success" });
         })
@@ -221,7 +220,6 @@ router.post("/users/:id/person/:person_id", [isLoggedIn], (req, res) => {
 router.get("/users/:id/events", [isLoggedIn], (req, res) => {
     try {
         connection.query("SELECT * from events WHERE id IN (select event_fk from events_invites where user_fk = ? ) OR createdby_fk = ?", [req.session.userID, req.session.userID], (error, results) => {
-            console.log(results)
             if(error) res.send({ myEventsData: "error" });
             if(results) res.send({ myEventsData: results });
         })

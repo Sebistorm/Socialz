@@ -51,7 +51,7 @@
 </script>
 
 {#if event.createdby_fk === $user.id}
-	<div class="container">
+	<div class="container" style="min-height: calc(100vh - 12rem);">
 		<h1>Edit Event</h1>
 		<p>{resmsg}</p>
 		<div class="editWrapper">
@@ -62,6 +62,8 @@
 					type="text"
 					name="title"
 					placeholder="title"
+					minlength="3"
+					required
 				/>
 				<label for="description">description</label>
 				<textarea
@@ -69,12 +71,15 @@
 					type="text"
 					name="description"
 					class="w-100"
+					minlength="3"
+					required
 				/>
 				<label for="date">Date</label>
 				<input
 					bind:value={event.date}
 					type="date"
 					name="date"
+					required
 				/>
 				<button type="submit" class="mt-3">Save</button>
 			</form> 

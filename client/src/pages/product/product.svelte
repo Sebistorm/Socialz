@@ -69,7 +69,7 @@
     }
 </script>
 
-<div class="container">
+<div class="container" style="min-height: calc(100vh - 12rem);">
     <div id="productWrapper">
         <div class="imgWrapper">
             <img class="w-100" src="/{productImg}" alt="{title}">

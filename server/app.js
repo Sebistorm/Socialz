@@ -1,6 +1,9 @@
 import express from "express";
 const app = express();
 
+import dotenv from "dotenv";
+dotenv.config();
+
 app.use(express.json());
 
 import helmet from "helmet";
@@ -12,7 +15,7 @@ app.use("/uploads", express.static("uploads"));
 
 import session from "express-session"
 app.use(session({
-    secret: 'den firkantet lave hund',
+    secret: process.env.SECRET_STRING,
     resave: false,
     saveUninitialized: false
 }));

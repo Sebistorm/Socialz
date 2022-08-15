@@ -103,7 +103,7 @@
 </script>
 {#if product.seller_fk == $user.id}
 
-    <div class="container"> 
+    <div class="container" style="min-height: calc(100vh - 12rem);"> 
         <p>{resmsg}</p>
         
         <div id="productWrapper">
@@ -116,6 +116,8 @@
                         type="text"
                         name="title"
                         placeholder="title"
+                        minlength="3"
+                        required
                     />
                     <label for="description">Description</label>
                     <textarea
@@ -123,12 +125,16 @@
                         type="text"
                         name="description"
                         placeholder="description"
+                        minlength="3"
+                        required
                     />
                     <label for="price">Price</label>
                     <input
                         bind:value={product.price}
-                        type="number"
+                        type="text"
                         name="price"
+                        minlength="3"
+                        required
                     />
                     <select bind:value="{product.category_fk}">
                         {#each categories as category}
@@ -151,6 +157,7 @@
                         on:change={onChange}
                         type="file"
                         name="productimage"
+                        required
                     />
             
                     {#if showImage}

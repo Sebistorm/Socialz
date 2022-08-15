@@ -17,7 +17,7 @@
 
 </script>
 
-<div class="container">
+<div class="container" style="min-height: calc(100vh - 12rem);">
     <div class="d-flex align-items-center justify-content-between">
         <h1>My Products</h1>
         <span><Link class="text-blue" to="/marketplace/create">Create Product</Link></span>

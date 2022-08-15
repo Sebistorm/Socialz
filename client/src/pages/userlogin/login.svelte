@@ -72,7 +72,7 @@
 #loginCompontent {
 	display: flex;
     align-items: center;
-    min-height: calc(100vh - 7rem);
+    min-height: calc(100vh - 12rem);
 }
 
 

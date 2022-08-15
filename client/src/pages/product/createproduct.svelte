@@ -85,6 +85,8 @@
 			type="text"
 			name="title"
 			placeholder="title"
+            minlength="3"
+            required
 		/>
         <label for="description">Description</label>
 		<textarea
@@ -92,12 +94,16 @@
 			type="text"
 			name="description"
 			placeholder="description"
+            minlength="3"
+            required
 		/>
 		<label for="price">Price</label>
 		<input
 			bind:value={product.price}
-			type="number"
+			type="text"
 			name="price"
+            minlength="3"
+            required
 		/>
         <label for="productimage">Product Image</label>
 		<input
@@ -105,6 +111,7 @@
             on:change={onChange}
 			type="file"
 			name="productimage"
+            required
 		/>
 
         {#if showImage}
@@ -124,7 +131,7 @@
 #createEventWrapper {
 	display: flex;
     align-items: center;
-    min-height: calc(100vh - 62px);
+    min-height: calc(100vh - 12rem);
 }
 
 

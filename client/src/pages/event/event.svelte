@@ -10,6 +10,7 @@
     let title;
     let date;
     let eventpicture = "uploads/ano-user.png";
+    let description;
     let createdby_fk; 
 
     let attendingCount;
@@ -26,6 +27,7 @@
             title = eventData[0].title;
             date = eventData[0].date;
             eventpicture = eventData[0].eventpicture;
+            description = eventData[0].description;
             createdby_fk = eventData[0].createdby_fk;
         } catch (error) {
             console.log(error);
@@ -153,6 +155,8 @@
                             type="text"
                             name="eventPostText"
                             placeholder="Something on your mind?"
+                            minlength="1"
+                            required
                         />
                         <button class="btn btn-primary" type="submit">Post It</button>
                     </form>
@@ -177,6 +181,11 @@
 
                     <GuestListCount count={invitedCount} text="Invited" />
                 </div>
+            </div>
+
+            <div class="eventDescriptionWrapper mt-5">
+                <h2>Event Description</h2>
+                <p>{description}</p>
             </div>
         </div>
     </div>
@@ -229,7 +238,17 @@ img {
 }
 
 
+.eventDescriptionWrapper {
+    background-color: #31394c;
+    padding: 1rem 1rem 1.5rem;
+    border: 1px solid black;
+    color: white;
+    box-shadow: 0px 0px 15px 3px #000000;
+}
 
+.eventDescriptionWrapper p {
+    margin-bottom: 0px;
+}
 
 
 </style>

@@ -42,6 +42,8 @@
 			type="text"
 			name="title"
 			placeholder="title"
+			minlength="3"
+			required
 		/>
         <label for="description">Description</label>
 		<textarea
@@ -49,12 +51,15 @@
 			type="text"
 			name="description"
 			placeholder="description"
+			minlength="3"
+			required
 		/>
 		<label for="date">date</label>
 		<input
 			bind:value={event.date}
 			type="date"
 			name="date"
+			required
 		/>
 		<button type="submit">Create</button>
 	</form>
@@ -64,7 +69,7 @@
 #createEventWrapper {
 	display: flex;
     align-items: center;
-    min-height: calc(100vh - 62px);
+    min-height: calc(100vh - 12rem);
 }
 
 

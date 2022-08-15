@@ -92,7 +92,7 @@
             <div class="chatTyping">
                 <form on:submit={handleCreateMessage} class="d-flex">
                     <textarea bind:value={chatMessage} name="chatMessage"></textarea>
-                    <input class="btn btn-primary" type="submit">
+                    <input class="btn btn-primary" type="submit" minlength="1" required>
                 </form>
             </div>
             <div id="chatmessages">
@@ -125,7 +125,7 @@
     .chatWrapper {
         display: grid;
         grid-template-columns: 2fr 1fr;
-        height: calc(100vh - 8rem);
+        height: calc(100vh - 12rem);
     }
 
     .chatWindow {
