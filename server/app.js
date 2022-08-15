@@ -31,7 +31,7 @@ let count = 0;
 
 io.on("connection", (socket) => {
     socket.on("userLoggedIn", ( userid ) => {
-        console.log("user logged in: " + userid)
+        console.log("user logged in: " + userid);
         count++
         socket.broadcast.emit("userOnline", count);
         
@@ -65,6 +65,9 @@ app.use(productRouter);
 
 import postRouter from "./routers/postRouter.js";
 app.use(postRouter); 
+
+import testRouter from "./routers/testRouter.js";
+app.use(testRouter);
 
 app.use(express.static(path.resolve("../client/public")));
 

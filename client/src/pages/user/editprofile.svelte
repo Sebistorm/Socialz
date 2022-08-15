@@ -95,10 +95,10 @@
 			<label for="email">email</label>
 			<input
 				bind:value={email}
-				type="text"
+				type="email"
 				name="email"
 				placeholder="email"
-				minlength="3"
+				minlength="6"
                 required
 			/>
 			<label for="name">Name</label>

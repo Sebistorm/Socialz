@@ -29,7 +29,7 @@
 
 </script>
 
-<div class="container mt-5">
+<div class="container mt-5" style="min-height: calc(100vh - 12rem);">
     <h1>Users</h1>
     <form on:submit={handleSearchAfterUser} id="searchbar">
         <input

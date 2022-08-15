@@ -33,7 +33,7 @@
 					profilepicture: userLoginData.results.profilepicture
 				});
 				socket.emit("userLoggedIn", userLoginData.results.id);
-				const from = ($location.state && $location.state.from) || "/";
+				const from = "/";
 				navigate(from, { replace: true });
 			} else {
 				resmsg = "something went wrong";
@@ -52,9 +52,11 @@
 		<label for="email">email</label>
 		<input
 			bind:value={newUser.email}
-			type="text"
+			type="email"
 			name="email"
 			placeholder="email"
+			minlength="6"
+            required
 		/>
 		<label for="password">Password</label>
 		<input
@@ -62,6 +64,8 @@
 			type="password"
 			name="password"
 			placeholder="Password"
+			minlength="6"
+            required
 		/>
 		<button type="submit">Login</button>
 	</form>

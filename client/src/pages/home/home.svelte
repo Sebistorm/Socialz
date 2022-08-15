@@ -57,22 +57,7 @@
 
 </script>
 
-<div>
-    <h1>Home</h1>
-
-    <Link to="community/createevent">Create Event</Link>
-    <Link to="community/users/4/events">Se My Events</Link>
-
-    <p><Link to="marketplace/create">Create Product</Link></p>
-    <p><Link to="marketplace/users/4/myproducts">See my Products</Link></p>
-    <p><Link to="marketplace/products">See all Products</Link></p>
-
-    <p><Link to="marketplace/editproduct/2">Anden kundens product</Link></p>
-    <p><Link to="marketplace/productreceipt/1">Kvittering</Link></p>
-
-</div>
-
-<div class="container">
+<div class="container" style="min-height: calc(100vh - 12rem);">
     <div class="createUserPostWrapper pb-4">
         <form on:submit={handleCreateUserPost}>
             <h2>Create Post</h2>
@@ -87,9 +72,7 @@
             <button class="btn btn-primary" type="submit">Post It</button>
         </form>
     </div>  
-</div>
 
-<div class="container">
     <div class="userspostsWrapper">
         {#each usersPosts as usersPost}
             <Userpost name={usersPost.name} date={usersPost.date} text={usersPost.text} imgSrc={usersPost.profilePicture} />

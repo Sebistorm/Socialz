@@ -59,7 +59,7 @@
 
 </script>
 
-<div class="container">
+<div class="container" style="min-height: calc(100vh - 12rem);">
     <div class="d-flex align-items-center justify-content-between">
         <h1>All Products</h1>
         <span><Link class="text-blue" to="/marketplace/users/{$user.id}/myproducts">See my Products</Link></span>

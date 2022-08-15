@@ -43,9 +43,11 @@
 		<label for="email">Email</label>
 		<input
 			bind:value={user.email}
-			type="text"
+			type="email"
 			name="email"
 			placeholder="email"
+			minlength="6"
+            required
 		/>
         <label for="name">Name</label>
 		<input
@@ -53,6 +55,8 @@
 			type="text"
 			name="name"
 			placeholder="name"
+			minlength="6"
+            required
 		/>
 		<label for="password">Password</label>
 		<input
@@ -60,6 +64,8 @@
 			type="password"
 			name="password"
 			placeholder="Password"
+			minlength="6"
+            required
 		/>
 		<button type="submit">Signup</button>
 	</form>

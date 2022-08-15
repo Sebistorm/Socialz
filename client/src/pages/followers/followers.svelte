@@ -3,7 +3,6 @@
     import User from "../../component/user/user.svelte";
 
     export let id;
-    console.log(id);
 
     let followers = [];
     let followersCount = 0;
@@ -15,7 +14,6 @@
             let {followersData} = await followersResponse.json();
             followers = followersData;
             followersCount = followersData.length;
-            console.log(followers);
         } catch (error) {
             console.log(error);
         }
