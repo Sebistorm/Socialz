@@ -15,35 +15,39 @@
 	let resmsg = "";
 
     onMount(async () => {
-		const eventResponse = await fetch(`/events/${eventID}`);
-		const { eventData } = await eventResponse.json();
-        console.log(eventData);
-        event.title = eventData[0].title;
-        event.date = eventData[0].date;
-        event.description = eventData[0].description;
-		event.createdby_fk = eventData[0].createdby_fk;
+		try {
+			const eventResponse = await fetch(`/events/${eventID}`);
+			const { eventData } = await eventResponse.json();
+			event.title = eventData[0].title;
+			event.date = eventData[0].date;
+			event.description = eventData[0].description;
+			event.createdby_fk = eventData[0].createdby_fk;	
+		} catch (error) {
+			console.log(error);
+		}
+		
 	});
 
     async function handleUpdateEvent(e) {
 		e.preventDefault();
-
-		const updateEventResponse = await fetch(`/events/${eventID}`, {
-            method: "put",
-            headers: {
-                'content-type': 'application/json'
-            },
-            body: JSON.stringify(event)
-        })
-        const {updateEventData} = await updateEventResponse.json();
-        console.log(updateEventData);
-        if(updateEventData === "success") {
-            resmsg = "The event has been updated"
-        } else {
-			resmsg = "Something went wrong"
+		try {
+			const updateEventResponse = await fetch(`/events/${eventID}`, {
+				method: "put",
+				headers: {
+					'content-type': 'application/json'
+				},
+				body: JSON.stringify(event)
+			})
+			const {updateEventData} = await updateEventResponse.json();
+			if(updateEventData === "success") {
+				resmsg = "The event has been updated";
+			} else {
+				resmsg = "Something went wrong";
+			}	
+		} catch (error) {
+			resmsg = "Something went wrong";
 		}
 	}
-
-
 </script>
 
 {#if event.createdby_fk === $user.id}

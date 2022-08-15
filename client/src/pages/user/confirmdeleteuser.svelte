@@ -3,13 +3,17 @@
 
     async function handleDeleteUser(e) {
         e.preventDefault();
-        const deleteUserResponse = await fetch(`/users/${$user.id}`, {
-            method: "delete"
-        })
-        const {deleteUserData} = await deleteUserResponse.json();
-        console.log(deleteUserData);
-        if(deleteUserData === "success") {
-            $user = null;
+
+        try {
+            const deleteUserResponse = await fetch(`/users/${$user.id}`, {
+                method: "delete"
+            });
+            const {deleteUserData} = await deleteUserResponse.json();
+            if(deleteUserData === "success") {
+                $user = null;
+            }            
+        } catch (error) {
+            console.log(error);
         }
 	}
 

@@ -10,13 +10,17 @@
     let notAttending = [];
 
     onMount(async () => {
-        const invitedPeopleResponse = await fetch(`/events/${eventID}/users`);
-        const {invitedPeopleData} = await invitedPeopleResponse.json();
+        try {
+            const invitedPeopleResponse = await fetch(`/events/${eventID}/users`);
+            const {invitedPeopleData} = await invitedPeopleResponse.json();
 
-        invited = invitedPeopleData.filter(people => people.status === "Invited");
-        attendees = invitedPeopleData.filter(people => people.status === "Attending");
-        maybeAttending = invitedPeopleData.filter(people => people.status === "Maybe Attending");
-        notAttending = invitedPeopleData.filter(people => people.status === "Not Attending");
+            invited = invitedPeopleData.filter(people => people.status === "Invited");
+            attendees = invitedPeopleData.filter(people => people.status === "Attending");
+            maybeAttending = invitedPeopleData.filter(people => people.status === "Maybe Attending");
+            notAttending = invitedPeopleData.filter(people => people.status === "Not Attending");
+        } catch (error) {
+            console.log(error);
+        }
 	});
 
 </script>

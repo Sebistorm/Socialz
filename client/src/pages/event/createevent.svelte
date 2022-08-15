@@ -13,18 +13,21 @@
 
     async function handleCreateEvent(e) {
 		e.preventDefault();
-		const createEventResponse = await fetch("/events", {
-			method: "post",
-			headers: {
-				'content-type': 'application/json'
-			},
-			body: JSON.stringify(event)
-		})
-		const {createEventData} = await createEventResponse.json();
-		console.log(createEventData);
-		if(createEventData === "success") {
-			const from = ($location.state && $location.state.from) || `/community/users/${$user.id}/events`;
-			navigate(from, { replace: true });
+		try {
+			const createEventResponse = await fetch("/events", {
+				method: "post",
+				headers: {
+					'content-type': 'application/json'
+				},
+				body: JSON.stringify(event)
+			})
+			const {createEventData} = await createEventResponse.json();
+			if(createEventData === "success") {
+				const from = ($location.state && $location.state.from) || `/community/users/${$user.id}/events`;
+				navigate(from, { replace: true });
+			}	
+		} catch (error) {
+			console.log(error)
 		}
 	}
 </script>

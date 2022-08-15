@@ -7,29 +7,53 @@
     let products = [];
     let categories = [];
     onMount(async () => {
-		const productsResponse = await fetch("/products");
-		const { productsData } = await productsResponse.json();
-        products = productsData;
-
-        const categoriesResponse = await fetch(`/productCategories`);
-		const { categoriesData } = await categoriesResponse.json();
-        console.log(categoriesData);
-        categories = categoriesData;
+        try {
+            const productsResponse = await fetch("/products");
+            const { productsData } = await productsResponse.json();
+            products = productsData;    
+        } catch (error) {
+            console.log(error);
+        }
+		
+        try {
+            const categoriesResponse = await fetch(`/productCategories`);
+            const { categoriesData } = await categoriesResponse.json();
+            categories = categoriesData;    
+        } catch (error) {
+            console.log(error);
+        }
 	});
 
     let search;
     async function handleSearchAfterProducts(e) {
         e.preventDefault();
-        const productsResponse = await fetch("/products?title="+search);
-		const { productsData } = await productsResponse.json();
-        products = productsData;
+        try {
+            const productsResponse = await fetch("/products?title="+search);
+            const { productsData } = await productsResponse.json();
+            products = productsData;    
+        } catch (error) {
+            console.log(error);
+        }
+        
     }
 
     let category_id;
     async function handleSortBycategory() {
-        const productsResponse = await fetch("/products/sort/"+category_id.value);
-		const { productsData } = await productsResponse.json();
-        products = productsData;
+
+        try {
+            if(category_id.value != 0) {
+            const productsResponse = await fetch("/products/sort/"+category_id.value);
+            const { productsData } = await productsResponse.json();
+            products = productsData;
+        } else if (category_id.value == 0) {
+            const productsResponse = await fetch("/products");
+            const { productsData } = await productsResponse.json();
+            products = productsData;
+        }    
+        } catch (error) {
+            console.log(error);
+        }
+        
     }
 
 
@@ -51,8 +75,9 @@
     </form>
 
     <select on:change={handleSortBycategory} bind:this="{category_id}">
+        <option value=0></option>
         {#each categories as category}                        
-            <option value="{category.id}">{category.categoryname}</option>
+            <option value={category.id}>{category.categoryname}</option>
         {/each}
     </select>
 

@@ -19,82 +19,98 @@
     let eventPosts = [];
 
     onMount(async () => {
-        // event info
-        const eventsResponse = await fetch(`/events/${eventID}`);
-		const { eventData } = await eventsResponse.json();
-        title = eventData[0].title;
-        date = eventData[0].date;
-        eventpicture = eventData[0].eventpicture
-        createdby_fk = eventData[0].createdby_fk
-
-        // counting (attending, maybe attending etc.)
-        const eventAttendingCountResponse = await fetch(`/events/${eventID}/users/count`);
-		const { eventAttendingCountData } = await eventAttendingCountResponse.json();
-        attendingCount = eventAttendingCountData[0].Attending_count;
-        maybeAttendingCount = eventAttendingCountData[0].Maybe_Attending_count;
-        invitedCount = eventAttendingCountData[0].Invited_count;
-
-        //event posts
-        const eventPostsResponse = await fetch(`/events/${eventID}/posts`);
-        const { eventPostsData } = await eventPostsResponse.json();
-        eventPosts = eventPostsData;
+        try {
+            // event info
+            const eventsResponse = await fetch(`/events/${eventID}`);
+            const { eventData } = await eventsResponse.json();
+            title = eventData[0].title;
+            date = eventData[0].date;
+            eventpicture = eventData[0].eventpicture;
+            createdby_fk = eventData[0].createdby_fk;
+        } catch (error) {
+            console.log(error);
+        }
+        
+        try {
+            // counting (attending, maybe attending etc.)
+            const eventAttendingCountResponse = await fetch(`/events/${eventID}/users/count`);
+            const { eventAttendingCountData } = await eventAttendingCountResponse.json();
+            attendingCount = eventAttendingCountData[0].Attending_count;
+            maybeAttendingCount = eventAttendingCountData[0].Maybe_Attending_count;
+            invitedCount = eventAttendingCountData[0].Invited_count;    
+        } catch (error) {
+            console.log(error);
+        }
+        
+        try {
+            //event posts
+            const eventPostsResponse = await fetch(`/events/${eventID}/posts`);
+            const { eventPostsData } = await eventPostsResponse.json();
+            eventPosts = eventPostsData;    
+        } catch (error) {
+            console.log(error);
+        }
+        
 	});
 
     let statusResponseText ="";
     async function changeAttendingStatus(statusText) {
-        console.log(statusText);
-        const changeStatusResponse = await fetch(`/events/${eventID}/users/${$user.id}`, {
-            method: "put",
-            headers: {
-                'content-type': 'application/json'
-            },
-            body: JSON.stringify({
-                status: statusText
+        try {
+            const changeStatusResponse = await fetch(`/events/${eventID}/users/${$user.id}`, {
+                method: "put",
+                headers: {
+                    'content-type': 'application/json'
+                },
+                body: JSON.stringify({
+                    status: statusText
+                })
             })
-        })
 
-        const {changeStatusData} = await changeStatusResponse.json();
-        if(changeStatusData === "success") {
-            statusResponseText = "You are now: " + statusText;
+            const {changeStatusData} = await changeStatusResponse.json();
+            if(changeStatusData === "success") {
+                statusResponseText = "You are now: " + statusText;
+            }
+        } catch (error) {
+            console.log(error);
         }
+        
     }
 
 
     let eventPostText;
     async function handleSubmitEventPost(e) {
         e.preventDefault();
-        console.log("create post");
-        const eventPostResponse = await fetch(`/events/${eventID}/posts/`, {
-            method: "post",
-            headers: {
-                'content-type': 'application/json'
-            },
-            body: JSON.stringify({
-                eventPostText: eventPostText
+        try {
+            const eventPostResponse = await fetch(`/events/${eventID}/posts/`, {
+                method: "post",
+                headers: {
+                    'content-type': 'application/json'
+                },
+                body: JSON.stringify({
+                    eventPostText: eventPostText
+                })
             })
-        })
-        const {eventPostData} = await eventPostResponse.json();
-        if(eventPostData === "success") {
-            const date = new Date();
-            const day = date.getDate();
-            const month = date.getMonth()+1;
-            const year = date.getFullYear();
-            const hour = date.getHours();
-            const min = date.getMinutes();
-            const dateObject = year + '-' + month + '-' + day  + ' ' + hour  + ':' + min;
-            const newEventPost = {
-                date: dateObject,
-                text: eventPostText
+            const {eventPostData} = await eventPostResponse.json();
+            if(eventPostData === "success") {
+                const date = new Date();
+                const day = date.getDate();
+                const month = date.getMonth()+1;
+                const year = date.getFullYear();
+                const hour = date.getHours();
+                const min = date.getMinutes();
+                const dateObject = year + '-' + month + '-' + day  + ' ' + hour  + ':' + min;
+                const newEventPost = {
+                    date: dateObject,
+                    text: eventPostText
+                }
+                eventPosts = [{...newEventPost}, ...eventPosts];
+                eventPostText = "";
+                
             }
-            eventPosts = [{...newEventPost}, ...eventPosts];
-            eventPostText = "";
-            
+        } catch (error) {
+            console.log(error);
         }
     }
-    
-
-
-
 
 </script>
 
@@ -153,7 +169,7 @@
         </div>
         <div class="right">
             <div class="guestListWrapper">
-                <div class="d-flex justify-content-between"><h2>Guestlist</h2> <Link class="text-blue" to="/events/{eventID}/users">See all</Link></div>
+                <div class="d-flex justify-content-between"><h2>Guestlist</h2> <Link class="text-blue" to="/community/events/{eventID}/users">See all</Link></div>
                 <div class="guestListContent">
                     <GuestListCount count={attendingCount} text="Attendees" />
 

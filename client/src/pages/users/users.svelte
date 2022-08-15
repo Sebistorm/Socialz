@@ -6,16 +6,25 @@
     let search;
 
     onMount(async () => {
-        const usersresponse = await fetch("/users");
-        const { usersData } = await usersresponse.json();
-        users = usersData;
+        try {
+            const usersresponse = await fetch("/users");
+            const { usersData } = await usersresponse.json();
+            users = usersData;    
+        } catch (error) {
+            console.log(error);
+        }
+        
     });   
 
     async function handleSearchAfterUser(e) {
         e.preventDefault();
-        const usersresponse = await fetch("/users?name="+search);
-        const { usersData } = await usersresponse.json();
-        users = usersData;
+        try {
+            const usersresponse = await fetch("/users?name="+search);
+            const { usersData } = await usersresponse.json();
+            users = usersData;    
+        } catch (error) {
+            console.log(error);
+        }
     }
 
 </script>

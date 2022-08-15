@@ -14,20 +14,23 @@
 
 	async function handleCreateUser(e) {
 		e.preventDefault();
-		const createUserResponse = await fetch(`/users`, {
-            method: "post",
-            headers: {
-                'content-type': 'application/json'
-            },
-            body: JSON.stringify(user)
-        })
-        const {createUserData} = await createUserResponse.json();
-        console.log(createUserData);
-		if(createUserData === "success") {
-			const from = ($location.state && $location.state.from) || "/login";
-			navigate(from, { replace: true });
-		} else {
-			resmsg = "something went wrong"
+		try {
+			const createUserResponse = await fetch(`/users`, {
+				method: "post",
+				headers: {
+					'content-type': 'application/json'
+				},
+            	body: JSON.stringify(user)
+			})
+			const {createUserData} = await createUserResponse.json();
+			if(createUserData === "success") {
+				const from = ($location.state && $location.state.from) || "/login";
+				navigate(from, { replace: true });
+			} else {
+				resmsg = "something went wrong";
+			}			
+		} catch (error) {
+			resmsg = "something went wrong";
 		}
 	}
 
@@ -67,7 +70,7 @@
 #signupWrapper {
 	display: flex;
     align-items: center;
-    min-height: calc(100vh - 62px);
+    min-height: calc(100vh - 7rem);
 }
 
 

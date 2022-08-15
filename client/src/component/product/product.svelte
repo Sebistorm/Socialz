@@ -9,7 +9,7 @@
 
 
 <Link to="/marketplace/products/{productID}">
-    <div class="product d-flex flex-column align-items-center">
+    <div class="product d-flex flex-column">
         <img class="w-100" src="/{productImg}" alt="{title}">
         <div class="productBody">
             <h5>{title}</h5>
@@ -28,6 +28,7 @@
         padding: 0px 0px 1rem;
         box-shadow: 0px 0px 15px 3px #000000;
         border: 1px solid white;
+        height: 100%;
     }
 
     .product img {

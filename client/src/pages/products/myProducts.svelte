@@ -6,10 +6,13 @@
 
     let myProducts = [];
     onMount(async () => {
-		const myProductsResponse = await fetch(`/products/users/${$user.id}`);
-		const { myProductsData } = await myProductsResponse.json();
-        console.log(myProductsData);
-        myProducts = myProductsData;
+        try {
+            const myProductsResponse = await fetch(`/products/users/${$user.id}`);
+            const { myProductsData } = await myProductsResponse.json();
+            myProducts = myProductsData;    
+        } catch (error) {
+            console.log(error);
+        }
 	});
 
 </script>

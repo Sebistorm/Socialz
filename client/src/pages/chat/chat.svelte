@@ -14,16 +14,24 @@
     let personName;
     let personProfilepicture = "uploads/ano-user.png";
 
+    
     onMount(async () => {
-		const chatResponse = await fetch(`/users/${$user.id}/person/${id}`);
-		const { chatData } = await chatResponse.json();
-        chatMessages = chatData;
+		try {
+            const chatResponse = await fetch(`/users/${$user.id}/person/${id}`);
+            const { chatData } = await chatResponse.json();
+            chatMessages = chatData;
+        } catch (error) {
+            console.log(error)
+        }
 
-        const userResponse = await fetch(`/users/${id}`);
-		const { userData } = await userResponse.json();
-        personName = userData[0].name;
-        personProfilepicture = userData[0].profilepicture
-
+        try {
+            const userResponse = await fetch(`/users/${id}`);
+            const { userData } = await userResponse.json();
+            personName = userData[0].name;
+            personProfilepicture = userData[0].profilepicture    
+        } catch (error) {
+            console.log(error)
+        }
 	});
 
 
@@ -48,27 +56,31 @@
     async function handleCreateMessage (e) {
         e.preventDefault();
         if(chatMessage.length > 0) {
-            const userMesssageResponse = await fetch(`/users/${$user.id}/person/${id}`, {
-                method: "post",
-                headers: {
-                    'content-type': 'application/json'
-                },
-                body: JSON.stringify({
-                    chatMessage:chatMessage
+            try {
+                const userMesssageResponse = await fetch(`/users/${$user.id}/person/${id}`, {
+                    method: "post",
+                    headers: {
+                        'content-type': 'application/json'
+                    },
+                    body: JSON.stringify({
+                        chatMessage:chatMessage
+                    })
                 })
-            })
-            const {userMesssageData} = await userMesssageResponse.json();
-            console.log(userMesssageData);
-            if(userMesssageData === "success") {
-                socket.emit("messageSent", chatMessage, Number(id));
-                const newMessageFromAnotherUser = {
-                    user_fk: $user.id,
-                    personname: $user.name,
-                    chatmessage: chatMessage
-                }
-                chatMessages = [...chatMessages, {...newMessageFromAnotherUser}];
-                chatMessage = ""
+                const {userMesssageData} = await userMesssageResponse.json();
+                if(userMesssageData === "success") {
+                    socket.emit("messageSent", chatMessage, Number(id));
+                    const newMessageFromAnotherUser = {
+                        user_fk: $user.id,
+                        personname: $user.name,
+                        chatmessage: chatMessage
+                    }
+                    chatMessages = [...chatMessages, {...newMessageFromAnotherUser}];
+                    chatMessage = "";
+                }    
+            } catch (error) {
+                console.log(error);
             }
+            
         }
         
     }
@@ -113,7 +125,7 @@
     .chatWrapper {
         display: grid;
         grid-template-columns: 2fr 1fr;
-        height: calc(100vh - 5rem);
+        height: calc(100vh - 8rem);
     }
 
     .chatWindow {

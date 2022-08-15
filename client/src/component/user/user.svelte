@@ -19,6 +19,7 @@
     .user {
         background-color: #31394c;
         color: white;
+        height: 100%;
     }
 
     .user img {
@@ -29,7 +30,7 @@
 
     .user h4 {
         text-align: center;
-        padding: 0.5rem;
+        padding: 1rem;
         margin-bottom: 0px;
     }
 

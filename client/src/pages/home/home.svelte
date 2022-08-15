@@ -8,43 +8,50 @@
 
     let usersPosts = [];
     onMount(async () => {
-		const usersPostsResponse = await fetch("/posts/users");
-		const { usersPostsData } = await usersPostsResponse.json();
-        usersPosts = usersPostsData;
-        console.log(usersPosts);
+        try {
+            const usersPostsResponse = await fetch("/posts/users");
+            const { usersPostsData } = await usersPostsResponse.json();
+            usersPosts = usersPostsData;    
+        } catch (error) {
+            console.log(error);
+        }
+		
         
 	});
 
     let userPostText;
     async function handleCreateUserPost(e) {
         e.preventDefault();
-        const userPostResponse = await fetch(`/posts/users/${$user.id}`, {
-            method: "post",
-            headers: {
-                'content-type': 'application/json'
-            },
-            body: JSON.stringify({
-                userPostText: userPostText
+        try {
+            const userPostResponse = await fetch(`/posts/users/${$user.id}`, {
+                method: "post",
+                headers: {
+                    'content-type': 'application/json'
+                },
+                body: JSON.stringify({
+                    userPostText: userPostText
+                })
             })
-        })
-        const {userPostData} = await userPostResponse.json();
-        console.log(userPostData);
-        if(userPostData === "success") {
-            const date = new Date();
-            const day = date.getDate();
-            const month = date.getMonth()+1;
-            const year = date.getFullYear();
-            const hour = date.getHours();
-            const min = date.getMinutes();
-            const dateObject = year + '-' + month + '-' + day  + ' ' + hour  + ':' + min;
-            const newUserPost = {
-                date: dateObject,
-                text: userPostText,
-                name: $user.name,
-                profilePicture: $user.profilepicture
+            const {userPostData} = await userPostResponse.json();
+            if(userPostData === "success") {
+                const date = new Date();
+                const day = date.getDate();
+                const month = date.getMonth()+1;
+                const year = date.getFullYear();
+                const hour = date.getHours();
+                const min = date.getMinutes();
+                const dateObject = year + '-' + month + '-' + day  + ' ' + hour  + ':' + min;
+                const newUserPost = {
+                    date: dateObject,
+                    text: userPostText,
+                    name: $user.name,
+                    profilePicture: $user.profilepicture
+                }
+                usersPosts = [{...newUserPost}, ...usersPosts];
+                userPostText = "";
             }
-            usersPosts = [{...newUserPost}, ...usersPosts];
-            userPostText = "";
+        } catch (error) {
+            console.log(error);
         }
     }
 

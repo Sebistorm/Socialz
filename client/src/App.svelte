@@ -59,6 +59,8 @@
 		<nav class="mb-5">
 			<div id="navbar" class="container">
 				<div>
+					<span style="font-weight: 600;"><em>Socialz</em></span>
+
 					{#if $user}
 						<Link to="/">Home</Link>
 					{/if}

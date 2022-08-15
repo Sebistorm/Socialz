@@ -18,34 +18,47 @@
 
     let categories = [];
     onMount(async () => {
-        const ProductResponse = await fetch(`/products/${productID}`);
-        const { ProductData } = await ProductResponse.json();
-        console.log(ProductData[0].seller_fk)
-        console.log($user.id)
-        product.title = ProductData[0].title;
-        product.description = ProductData[0].description;
-        product.price = Number(ProductData[0].price);
-        product.category_fk = ProductData[0].category_fk;
-        product.seller_fk = ProductData[0].seller_fk;
-        const categoriesResponse = await fetch(`/productCategories`);
-		const { categoriesData } = await categoriesResponse.json();
-        categories = categoriesData;
+        try {
+            const ProductResponse = await fetch(`/products/${productID}`);
+            const { ProductData } = await ProductResponse.json();
+            product.title = ProductData[0].title;
+            product.description = ProductData[0].description;
+            product.price = Number(ProductData[0].price);
+            product.category_fk = ProductData[0].category_fk;
+            product.seller_fk = ProductData[0].seller_fk;
+        } catch (error) {
+            console.log(error);
+        }
+
+        try {
+            const categoriesResponse = await fetch(`/productCategories`);
+            const { categoriesData } = await categoriesResponse.json();
+            categories = categoriesData;
+        } catch (error) {
+            console.log(error);
+        }
+        
+        
 	});
 
     async function handleUpdateProduct(e) {
         e.preventDefault();
-        const updateProductResponse = await fetch(`/products/${productID}`, {
-            method: "put",
-            headers: {
-                'content-type': 'application/json'
-            },
-            body: JSON.stringify(product)
-        })
-        const {updateProductData} = await updateProductResponse.json();
-        console.log(updateProductData);
-        if(updateProductData === "success") {
-            resmsg = "The product was updated"
+        try {
+            const updateProductResponse = await fetch(`/products/${productID}`, {
+                method: "put",
+                headers: {
+                    'content-type': 'application/json'
+                },
+                body: JSON.stringify(product)
+            })
+            const {updateProductData} = await updateProductResponse.json();
+            if(updateProductData === "success") {
+                resmsg = "The product was updated";
+            }    
+        } catch (error) {
+            resmsg = "Something went wrong";
         }
+        
     }
 
     let productpicture;
@@ -54,15 +67,19 @@
         const formData = new FormData();
 		formData.append("productpicture", productpicture[0]);
         
-        const updateProductImageResponse = await fetch(`/products/${productID}/productpicture`, {
-            method: "put",
-            body: formData
-        })
-        const {updateProductImageData} = await updateProductImageResponse.json();
-        console.log(updateProductImageData);
-        if(updateProductImageData === "success") {
-            resmsg = "The picture was updated"
+        try {
+            const updateProductImageResponse = await fetch(`/products/${productID}/productpicture`, {
+                method: "put",
+                body: formData
+            })
+            const {updateProductImageData} = await updateProductImageResponse.json();
+            if(updateProductImageData === "success") {
+                resmsg = "The picture was updated"
+            }    
+        } catch (error) {
+            resmsg = "Something went wrong";
         }
+        
 
     }
 

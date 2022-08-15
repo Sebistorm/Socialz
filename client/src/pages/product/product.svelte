@@ -25,43 +25,47 @@
     }
 
     onMount(async () => {
-        const ProductResponse = await fetch(`/products/${productID}`);
-        const { ProductData } = await ProductResponse.json();
-        console.log(ProductData); 
-        title = ProductData[0].title;
-        price = ProductData[0].price;
-        description = ProductData[0].description;
-        category = ProductData[0].categoryname;
-        sellerName = ProductData[0].name;
-        sellerEmail = ProductData[0].email;
-        seller_fk = ProductData[0].seller_fk;
-        productImg = ProductData[0].productpicture;
-        productactive = ProductData[0].active;
+        try {
+            const ProductResponse = await fetch(`/products/${productID}`);
+            const { ProductData } = await ProductResponse.json(); 
+            title = ProductData[0].title;
+            price = ProductData[0].price;
+            description = ProductData[0].description;
+            category = ProductData[0].categoryname;
+            sellerName = ProductData[0].name;
+            sellerEmail = ProductData[0].email;
+            seller_fk = ProductData[0].seller_fk;
+            productImg = ProductData[0].productpicture;
+            productactive = ProductData[0].active;    
+        } catch (error) {
+            console.log(error);
+        }
+        
 	});
 
     let buymsg = "";
     async function handleBuyProduct(e) {
         e.preventDefault();
         buyer.seller_fk = seller_fk;
-        console.log("buy")
-        console.log(buyer);
-        const buyProductResponse = await fetch(`/products/${productID}/receipts`, {
-            method: "post",
-            headers: {
-                'content-type': 'application/json'
-            },
-            body: JSON.stringify(buyer)
-        })
-        const {buyProductData} = await buyProductResponse.json();
-        console.log(buyProductData);
-        if(buyProductData === "success") { 
-            buymsg = "congratz! You have bought this product. You will be redirected in 3 sec"
-            setTimeout(()=> {
-                const from = ($location.state && $location.state.from) || `/marketplace/productreceipt/${productID}`;
-		        navigate(from, { replace: true });
-            }, 3000)
-        }
-        
+        try {
+            const buyProductResponse = await fetch(`/products/${productID}/receipts`, {
+                method: "post",
+                headers: {
+                    'content-type': 'application/json'
+                },
+                body: JSON.stringify(buyer)
+            })
+            const {buyProductData} = await buyProductResponse.json();
+            if(buyProductData === "success") { 
+                buymsg = "congratz! You have bought this product. You will be redirected in 3 sec"
+                setTimeout(()=> {
+                    const from = ($location.state && $location.state.from) || `/marketplace/productreceipt/${productID}`;
+                    navigate(from, { replace: true });
+                }, 3000)
+            } 
+        } catch (error) {
+            console.log(error);
+        }   
     }
 </script>
 

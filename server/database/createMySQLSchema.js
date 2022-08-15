@@ -104,7 +104,7 @@ db.query(`
 CREATE TABLE IF NOT EXISTS products(
     id INT PRIMARY KEY AUTO_INCREMENT,
     title VARCHAR(150),
-    description VARCHAR(60),
+    description VARCHAR(255),
     price VARCHAR(60),
     productpicture VARCHAR(255),
     category_fk INT,

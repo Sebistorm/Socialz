@@ -10,16 +10,19 @@
     async function handleDeleteEvent(e) {
 		e.preventDefault();
 
-
-        const deleteEventResponse = await fetch(`/events/${eventID}`, {
-            method: "delete"
-        })
-        const {deleteEventData} = await deleteEventResponse.json();
-        console.log(deleteEventData);
-        if(deleteEventData === "success") {
-            const from = ($location.state && $location.state.from) || `/users/${$user.id}/events`;
-            navigate(from, { replace: true });
+        try {
+            const deleteEventResponse = await fetch(`/events/${eventID}`, {
+                method: "delete"
+            })
+            const {deleteEventData} = await deleteEventResponse.json();
+            if(deleteEventData === "success") {
+                const from = ($location.state && $location.state.from) || `/community/users/${$user.id}/events`;
+                navigate(from, { replace: true });
+            }    
+        } catch (error) {
+            console.log(error);
         }
+        
 	}
 
 </script>

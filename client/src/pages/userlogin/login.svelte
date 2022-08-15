@@ -2,13 +2,11 @@
 	import io from "socket.io-client";
 	const socket = io();
 	import { useNavigate, useLocation } from "svelte-navigator";
+	import {user} from "../../store/userStore";
 	
 	const navigate = useNavigate();
 	const location = useLocation();
 
-	import {user} from "../../store/userStore";
-  
-    
 	let newUser = {
 		email: "",
 		password: ""
@@ -18,53 +16,31 @@
 
 	async function handleUserLogin(e) {
 		e.preventDefault();
-		const userLoginResponse = await fetch("/users/login", {
-            method: "post",
-            headers: {
-                'content-type': 'application/json'
-            },
-            body: JSON.stringify(newUser)
+
+		try {
+			const userLoginResponse = await fetch("/users/login", {
+				method: "post",
+				headers: {
+					'content-type': 'application/json'
+				},
+				body: JSON.stringify(newUser)
         })
-        const {userLoginData} = await userLoginResponse.json();
-		if(userLoginData.status === "success") {
-			user.set({ 
-				id: userLoginData.results.id,
-				name: userLoginData.results.name,
-				profilepicture: userLoginData.results.profilepicture
-			});
-			socket.emit("userLoggedIn", userLoginData.results.id);
-			const from = ($location.state && $location.state.from) || "/";
-			navigate(from, { replace: true });
-		} else {
-			resmsg = "something went wrong"
-		}
-
-
-/*
-		
-		let userObjectString = JSON.stringify(newUser);
-		const fetchOptions = {
-		method: "POST",
-		headers: {
-			"Content-Type": "application/json"
-		},
-		body: userObjectString
-		}
-
-		fetch("/users/login", fetchOptions)
-		.then(async data =>  { 
-            const result = await data.json();
-			if (data.status === 200) {
-                user.set({ 
-					id: result.id,
-					name: result.name 
+			const {userLoginData} = await userLoginResponse.json();
+			if(userLoginData.status === "success") {
+				user.set({ 
+					id: userLoginData.results.id,
+					name: userLoginData.results.name,
+					profilepicture: userLoginData.results.profilepicture
 				});
-				socket.emit("userLoggedIn", result.id);
-                const from = ($location.state && $location.state.from) || "/";
-               	navigate(from, { replace: true });
-			}
-		});
-		*/
+				socket.emit("userLoggedIn", userLoginData.results.id);
+				const from = ($location.state && $location.state.from) || "/";
+				navigate(from, { replace: true });
+			} else {
+				resmsg = "something went wrong";
+			}	
+		} catch (error) {
+			resmsg = "something went wrong";
+		}
 	}
 
 </script>
@@ -96,7 +72,7 @@
 #loginCompontent {
 	display: flex;
     align-items: center;
-    min-height: calc(100vh - 62px);
+    min-height: calc(100vh - 7rem);
 }
 
 

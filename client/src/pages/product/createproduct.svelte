@@ -19,13 +19,16 @@
 
     let categories = [];
     onMount(async () => {
-		const categoriesResponse = await fetch(`/productCategories`);
-		const { categoriesData } = await categoriesResponse.json();
-        console.log(categoriesData);
-        categories = categoriesData;
+        try {
+            const categoriesResponse = await fetch(`/productCategories`);
+            const { categoriesData } = await categoriesResponse.json();
+            categories = categoriesData;    
+        } catch (error) {
+            console.log(error);
+        }	
 	});
 
-    async function handleSubmit(e) {
+    async function handleCreateProduct(e) {
 		e.preventDefault();
         const formData = new FormData();
 		formData.append("productpicture", product.productpicture[0]);
@@ -35,16 +38,20 @@
         formData.append("category_fk", product.category_fk.value);
         formData.append("seller_fk", product.seller_fk);
         
-        const createProductResponse = await fetch(`/products`, {
-            method: "post",
-            body: formData
-        })
-        const {createProductData} = await createProductResponse.json();
-        console.log(createProductData);
-        if(createProductData ==="success") {
-            const from = ($location.state && $location.state.from) || `/marketplace/users/${$user.id}/myproducts`;
-			navigate(from, { replace: true });
+        try {
+            const createProductResponse = await fetch(`/products`, {
+                method: "post",
+                body: formData
+            })
+            const {createProductData} = await createProductResponse.json();
+            if(createProductData ==="success") {
+                const from = ($location.state && $location.state.from) || `/marketplace/users/${$user.id}/myproducts`;
+                navigate(from, { replace: true });
+            } 
+        } catch (error) {
+            console.log(error);
         }
+        
 		
 	}
 
@@ -70,7 +77,7 @@
 
 
 <div id="createEventWrapper" class="container">
-	<form on:submit={handleSubmit} enctype="multipart/form-data">
+	<form on:submit={handleCreateProduct} enctype="multipart/form-data">
 		<h3>Create Product</h3>
 		<label for="name">Title</label>
 		<input

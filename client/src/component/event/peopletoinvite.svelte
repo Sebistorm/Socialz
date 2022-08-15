@@ -9,17 +9,19 @@
     let invited = false;
 
     async function inviteToEvent() {
-        console.log(userID);
         if (invited === false) {
-            const invitePeopleResponse = await fetch(`/events/${eventID}/invite/${userID}`, {
-            method: "post"
-            })
-            const {invitePeopleData} = await invitePeopleResponse.json();
-            console.log(invitePeopleData);
-            if (invitePeopleData === "success") {
-                btnText = "Invited"
-                invited = true;
-            } 
+            try {
+                const invitePeopleResponse = await fetch(`/events/${eventID}/invite/${userID}`, {
+                    method: "post"
+                })
+                const {invitePeopleData} = await invitePeopleResponse.json();
+                if (invitePeopleData === "success") {
+                    btnText = "Invited"
+                    invited = true;
+                }    
+            } catch (error) {
+                console.log(error);
+            }
         }
     }
 </script>

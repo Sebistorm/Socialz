@@ -6,9 +6,13 @@
     let peopleToInvite = [];
 
     onMount(async () => {
-        const peopleToInviteResponse = await fetch(`/events/${eventID}/invite`);
-		const { peopleToInviteData } = await peopleToInviteResponse.json();
-        peopleToInvite = peopleToInviteData;
+        try {
+            const peopleToInviteResponse = await fetch(`/events/${eventID}/invite`);
+            const { peopleToInviteData } = await peopleToInviteResponse.json();
+            peopleToInvite = peopleToInviteData;    
+        } catch (error) {
+            console.log(error);
+        }
 	});
 
 </script>

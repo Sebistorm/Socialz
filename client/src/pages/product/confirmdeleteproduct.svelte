@@ -8,15 +8,20 @@
 
     async function handleDeleteProduct(e) {
 		e.preventDefault();
-        const deleteProductResponse = await fetch(`/products/${productID}`, {
-            method: "delete"
-        })
-        const {deleteProductData} = await deleteProductResponse.json();
-        console.log(deleteProductData);
-        if(deleteProductData === "success") {
-            const from = ($location.state && $location.state.from) || "/";
-            navigate(from, { replace: true });
+
+        try {
+            const deleteProductResponse = await fetch(`/products/${productID}`, {
+                method: "delete"
+            })
+            const {deleteProductData} = await deleteProductResponse.json();
+            if(deleteProductData === "success") {
+                const from = ($location.state && $location.state.from) || "/";
+                navigate(from, { replace: true });
+            }    
+        } catch (error) {
+            console.log(error);
         }
+        
 	}
 
 </script>

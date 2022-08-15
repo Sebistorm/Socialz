@@ -9,31 +9,40 @@
 	let resmsg = "";
 
     onMount(async () => {
-		const userresponse = await fetch(`/users/${$user.id}`);
-		const { userData } = await userresponse.json();
-        console.log(userData);
-        name = userData[0].name;
-        email = userData[0].email;
+        try {
+            const userresponse = await fetch(`/users/${$user.id}`);
+            const { userData } = await userresponse.json();
+            name = userData[0].name;
+            email = userData[0].email;
+        } catch (error) {
+            console.log(error);
+        }
 	});
 
     async function handleUpdateUser(e) {
 		e.preventDefault();
 		user.email = email;
-		user.name = name
-		const updateUserResponse = await fetch(`/users/${$user.id}`, {
-            method: "put",
-            headers: {
-                'content-type': 'application/json'
-            },
-            body: JSON.stringify(user)
-        })
-        const {updateUserData} = await updateUserResponse.json();
-        console.log(updateUserData);
-        if(updateUserData === "success") {
-            resmsg = "The informations has been updated"
-        } else {
-			resmsg = "Something went wrong"
-		}
+		user.name = name;
+
+        try {
+            const updateUserResponse = await fetch(`/users/${$user.id}`, {
+                method: "put",
+                headers: {
+                    'content-type': 'application/json'
+                },
+                body: JSON.stringify(user)
+            })
+            const {updateUserData} = await updateUserResponse.json();
+            if(updateUserData === "success") {
+                resmsg = "The informations has been updated";
+            } else {
+                resmsg = "Something went wrong";
+            }            
+        } catch (error) {
+            resmsg = "Something went wrong";
+        }
+
+		
 	}
 
 	async function handleUpdateProfilePicture(e) {
@@ -41,17 +50,21 @@
         const formData = new FormData();
 		formData.append("profilepicture", profilepicture[0]);
         
-        const updateUserImageResponse = await fetch(`/users/${$user.id}/profilepicture`, {
-            method: "put",
-            body: formData
-        })
-        const {updateUserImageData} = await updateUserImageResponse.json();
-        console.log(updateUserImageData);
-        if(updateUserImageData === "success") {
-            resmsg = "The picture was updated"
-        } else {
-			resmsg = "Something went wrong"
-		}
+        try {
+            const updateUserImageResponse = await fetch(`/users/${$user.id}/profilepicture`, {
+                method: "put",
+                body: formData
+            })
+            const {updateUserImageData} = await updateUserImageResponse.json();
+            console.log(updateUserImageData);
+            if(updateUserImageData === "success") {
+                resmsg = "The picture was updated";
+            } else {
+                resmsg = "Something went wrong";
+            }            
+        } catch (error) {
+            resmsg = "Something went wrong";
+        }
 	}
 
 	let imagepreviewsrc;

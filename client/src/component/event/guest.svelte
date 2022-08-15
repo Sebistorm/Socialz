@@ -19,6 +19,7 @@
     .user {
         background-color: #858585;
         color: white;
+        height: 100%;
     }
 
     .user img {

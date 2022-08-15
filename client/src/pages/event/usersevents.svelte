@@ -6,22 +6,24 @@
     let upcomingEvents = [];
     let pastEvents = [];
 
-    var today = new Date();
-    var dd = String(today.getDate()).padStart(2, '0');
-    var mm = String(today.getMonth() + 1).padStart(2, '0'); //January is 0!
-    var yyyy = today.getFullYear();
+    let today = new Date();
+    let dd = String(today.getDate()).padStart(2, '0');
+    let mm = String(today.getMonth() + 1).padStart(2, '0'); //January is 0!
+    let yyyy = today.getFullYear();
 
     today = yyyy + '-' + mm + '-' + dd;
-    console.log(today)
 
 
     onMount(async () => {
+        try {
             const myEventsresponse = await fetch(`/users/${$user.id}/events`);
             const { myEventsData } = await myEventsresponse.json();
-            console.log(myEventsData);
-            //upcomingEvents = myEventsData;
             upcomingEvents = myEventsData.filter(event => event.date >= today);
             pastEvents = myEventsData.filter(event => event.date < today);
+        } catch (error) {
+            console.log(error);
+        }
+            
     });   
 
 </script>

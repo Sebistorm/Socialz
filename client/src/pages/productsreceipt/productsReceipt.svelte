@@ -4,7 +4,6 @@
     import {user} from "../../store/userStore";
 
     export let productID;
-    console.log(productID);
     let title; 
     let price;
     let description;
@@ -19,21 +18,25 @@
     
 
     onMount(async () => {
-        const productReceiptResponse = await fetch(`/products/${productID}/receipt`);
-        const { productReceiptData } = await productReceiptResponse.json();
-        if(productReceiptData.length > 0) {
-            title = productReceiptData[0].productTitle;
-            price = productReceiptData[0].productPrice;
-            description = productReceiptData[0].productDescription;
-            productImg = productReceiptData[0].productImg;
-            category = productReceiptData[0].productCategory;
-            sellerName = productReceiptData[0].sellerName;
-            sellerEmail = productReceiptData[0].sellerEmail;
-            sellerID = productReceiptData[0].sellerID;
-            buyerID = productReceiptData[0].buyerID;
-            buyerName = productReceiptData[0].buyerName;
-            buyerEmail = productReceiptData[0].buyerEmail;
-        }
+        try {
+            const productReceiptResponse = await fetch(`/products/${productID}/receipt`);
+            const { productReceiptData } = await productReceiptResponse.json();
+            if(productReceiptData.length > 0) {
+                title = productReceiptData[0].productTitle;
+                price = productReceiptData[0].productPrice;
+                description = productReceiptData[0].productDescription;
+                productImg = productReceiptData[0].productImg;
+                category = productReceiptData[0].productCategory;
+                sellerName = productReceiptData[0].sellerName;
+                sellerEmail = productReceiptData[0].sellerEmail;
+                sellerID = productReceiptData[0].sellerID;
+                buyerID = productReceiptData[0].buyerID;
+                buyerName = productReceiptData[0].buyerName;
+                buyerEmail = productReceiptData[0].buyerEmail;
+            }    
+        } catch (error) {
+            console.log(error);
+        } 
 	});
 
     
