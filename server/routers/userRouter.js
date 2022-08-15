@@ -116,6 +116,35 @@ router.get("/users/:search", [isLoggedIn], (req, res) => {
 });
 
 // GET
+// select all the users that follows the user
+router.get("/users/:id/followers", [isLoggedIn], (req, res) => {
+    try {
+        connection.query("SELECT users.id, users.name, users.profilepicture FROM follows JOIN users ON follows.user_fk = users.id WHERE follows.following_fk = ?", [req.params.id], (error, results) => {
+            if(error) res.send({followersData: error});
+            if(results) res.send({followersData: results});
+        })
+    } catch (error) {
+        console.log(error);
+        res.send({followersData: "error"});
+    }
+});
+
+// GET
+// which users the user is following
+router.get("/users/:id/following", [isLoggedIn], (req, res) => {
+    try {
+        connection.query("SELECT users.id, users.name, users.profilepicture FROM follows JOIN users ON follows.following_fk = users.id WHERE follows.user_fk = ?", [req.params.id], (error, results) => {
+            if(error) res.send({followingData: error});
+            if(results) res.send({followingData: results});
+        })
+    } catch (error) {
+        console.log(error);
+        res.send({followingData: "error"});
+    }
+});
+
+
+// GET
 // Showcase of which users the user is following
 router.get("/users/:id/following/showcase", [isLoggedIn], (req, res) => {
     try {

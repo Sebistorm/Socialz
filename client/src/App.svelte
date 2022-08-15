@@ -11,6 +11,8 @@
 	import UserConfirmDelete from "./pages/user/confirmdeleteuser.svelte";
 	import Users from "./pages/users/users.svelte";
 	import User from "./pages/user/user.svelte"
+	import UserFollowers from "./pages/followers/followers.svelte";
+	import UserFollowing from "./pages/following/following.svelte"
 
 	import Chat from "./pages/chat/chat.svelte";
 
@@ -122,6 +124,14 @@
 
 			<PrivateRoute path="community/users/:id" let:params>
 				<User id={params.id}></User>
+			</PrivateRoute>
+
+			<PrivateRoute path="community/users/:id/followers" let:params>
+				<UserFollowers id={params.id}></UserFollowers>
+			</PrivateRoute>
+
+			<PrivateRoute path="community/users/:id/following" let:params>
+				<UserFollowing id={params.id}></UserFollowing>
 			</PrivateRoute>
 
 			<PrivateRoute path="messages/t/:id" let:params>
